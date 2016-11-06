@@ -18,8 +18,7 @@ class DrawPanel extends JPanel implements Painter {
     private boolean started = false;
     private boolean stopped = false;
     private boolean isShowTime = true;
-    private int totalBikes = 0;
-    private int totalCars = 0;
+    private Statistic statistic;
 
     DrawPanel() {
         super();
@@ -34,17 +33,10 @@ class DrawPanel extends JPanel implements Painter {
         isShowTime = showTime;
     }
 
-    void setTotalBikes(int totalBikes) {
-        this.totalBikes = totalBikes;
+    public void setStatistic(final Statistic statistic) {
+        this.statistic = statistic;
     }
 
-    void setTotalCars(int totalCars) {
-        this.totalCars = totalCars;
-    }
-
-    public void setStarted(boolean started) {
-        this.started = started;
-    }
 
     @Override
     public void paint(Graphics g) {
@@ -67,11 +59,14 @@ class DrawPanel extends JPanel implements Painter {
 
 
         if (stopped) {
+
+            assert statistic != null;
+
             drawLinesCenter(g,
                     "Simulation stopped",
-                    String.format("Total cars : %d", totalCars),
-                    String.format("Total bikes: %d", totalBikes),
-                    String.format("Total time : %d", lastUpdatedTime)
+                    String.format("Total cars : %d", statistic.getTotalCarsCreated()),
+                    String.format("Total bikes: %d", statistic.getTotalBikesCreated()),
+                    String.format("Total time : %d", statistic.getTotalTime())
             );
         }
 

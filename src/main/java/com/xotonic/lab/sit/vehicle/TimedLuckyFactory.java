@@ -10,6 +10,8 @@ import java.util.Random;
 public abstract class TimedLuckyFactory extends Factory {
 
     private static int id = 1;
+
+
     int cooldown = 1000;
     private float createChance = 0.5f;
     private Random r = new Random();
@@ -67,6 +69,9 @@ public abstract class TimedLuckyFactory extends Factory {
         return time;
     }
 
+    public void setCooldown(int cooldown) {
+        this.cooldown = cooldown;
+    }
     @Override
     public void build() {
         Vehicle v = create();

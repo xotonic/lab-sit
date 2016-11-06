@@ -1,5 +1,8 @@
 package com.xotonic.lab.sit;
 
+import com.xotonic.lab.sit.settings.SettingsController;
+import com.xotonic.lab.sit.settings.SettingsModel;
+import com.xotonic.lab.sit.settings.SettingsView;
 import com.xotonic.lab.sit.vehicle.*;
 import com.xotonic.lab.sit.vehicle.Painter;
 import org.apache.logging.log4j.LogManager;
@@ -13,27 +16,73 @@ import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class Form extends JDialog implements KeyListener {
+public class Form extends JDialog implements KeyListener, SettingsView {
 
     static Logger log = LogManager.getLogger(Form.class.getName());
 
-    Habitat habitat = new SimpleHabitat();
-    TimedLuckyFactory carFactory = new CarFactory(habitat);
-    TimedLuckyFactory bikeFactory = new BikeFactory(habitat);
-    Painter painter;
-    SimulationTimer timer;
+
     private JPanel contentPane;
     private JPanel drawPanel;
-    private JPanel toolPanel;
+    private JPanel propertiesPanel;
+    private JButton sideBarStart;
+    private JButton sideBarStop;
+    private JCheckBox sideBarInfoToggle;
+    private JRadioButton sideBarTimeShow;
+    private JRadioButton sideBarTimeHide;
+    private JButton toolbarStartStop;
+    private JButton toolbarInfo;
+    private JButton tollbarTime;
+    private JPanel factoriesSettingsPanel;
+
     private DrawPanel drawer;
+    private Habitat habitat = new SimpleHabitat();
+    private TimedLuckyFactory carFactory = new CarFactory(habitat);
+    private TimedLuckyFactory bikeFactory = new BikeFactory(habitat);
+    private Painter painter;
+    private SimulationTimer timer;
+    private SettingsModel settingsModel;
+    private SettingsController settingsController;
+    private MenuView menuView;
+    private ToolBarView toolBarView;
+    private SideBarView sideBarView;
 
     public Form() {
         setContentPane(contentPane);
         setModal(true);
         addKeyListener(this);
+
         habitat.getPainters().add(painter);
+
         timer = new SimulationTimer();
         timer.setTarget(habitat);
+
+        settingsModel = new SettingsModel();
+
+        settingsController = new SettingsController();
+        settingsController.setModel(settingsModel);
+
+        menuView = new MenuView();
+        menuView.setController(settingsController);
+        settingsController.addView(menuView);
+        setJMenuBar(menuView.getMenuBar());
+
+        toolBarView = new ToolBarView(toolbarStartStop, toolbarInfo, tollbarTime);
+        toolBarView.setController(settingsController);
+        settingsController.addView(toolBarView);
+
+        sideBarView = new SideBarView(
+                sideBarStart,
+                sideBarStop,
+                sideBarInfoToggle,
+                sideBarTimeShow,
+                sideBarTimeHide
+        );
+
+        sideBarView.setController(settingsController);
+        settingsController.addView(sideBarView);
+
+        settingsController.addView(this);
+
     }
 
     public static void main(String[] args) {
@@ -48,7 +97,7 @@ public class Form extends JDialog implements KeyListener {
         System.exit(0);
     }
 
-    static void setLookAndFeel() {
+    private static void setLookAndFeel() {
         UIManager.put("nimbusBase", new Color(49, 247, 255));
         UIManager.put("nimbusBlueGrey", new Color(49, 51, 53));
         UIManager.put("control", new Color(49, 51, 53));
@@ -96,19 +145,25 @@ public class Form extends JDialog implements KeyListener {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyChar()) {
             case 'b':
-                timer.start();
+                startSimulation();
                 break;
             case 'e': {
-                drawer.setTotalCars(carFactory.getTotalCreated());
-                drawer.setTotalBikes(bikeFactory.getTotalCreated());
-                timer.reset();
+                stopSimulation();
             }
             break;
             case 't': {
-                drawer.setShowTime(!drawer.isShowTime());
+                toggleShowTime();
             }
             break;
         }
+    }
+
+    private void startSimulation() {
+        timer.start();
+    }
+
+    private void toggleShowTime() {
+        drawer.setShowTime(!drawer.isShowTime());
     }
 
     @Override
@@ -116,4 +171,50 @@ public class Form extends JDialog implements KeyListener {
 
     }
 
+
+    @Override
+    public void OnSimulationStart() {
+        startSimulation();
+    }
+
+    @Override
+    public void OnSimulationStop() {
+
+        stopSimulation();
+    }
+
+    private void stopSimulation() {
+        reportStatistic();
+        timer.reset();
+    }
+
+    private void reportStatistic() {
+        Statistic statistic = new Statistic();
+        statistic.setTotalCarsCreated(carFactory.getTotalCreated());
+        statistic.setTotalBikesCreated(bikeFactory.getTotalCreated());
+        statistic.setTotalTime(timer.getSimulationTime());
+        drawer.setStatistic(statistic);
+    }
+
+    @Override
+    public void OnShowInfo() {
+
+    }
+
+    @Override
+    public void OnHideInfo() {
+
+    }
+
+    @Override
+    public void OnShowTime() {
+        drawer.setShowTime(true);
+
+    }
+
+    @Override
+    public void OnHideTime() {
+        drawer.setShowTime(false);
+
+    }
 }

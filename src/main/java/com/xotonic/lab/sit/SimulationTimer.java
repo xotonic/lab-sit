@@ -12,17 +12,20 @@ import javax.swing.*;
  */
 public class SimulationTimer {
 
-    static Logger log = LogManager.getLogger(Form.class.getName());
+    private static Logger log = LogManager.getLogger(Form.class.getName());
 
-    Timer timer;
-    Habitat target;
-    boolean started = false;
-    int delay = 30;
-    long simulationTime = 0;
-    long simulationStartTime = -1;
-
+    private Timer timer;
+    private Habitat target;
+    private boolean started = false;
+    private int delay = 30;
+    private long simulationTime = 0;
+    private long simulationStartTime = -1;
     public SimulationTimer() {
         timer = new Timer(delay, null);
+    }
+
+    public long getSimulationTime() {
+        return simulationTime;
     }
 
     public boolean isStarted() {
