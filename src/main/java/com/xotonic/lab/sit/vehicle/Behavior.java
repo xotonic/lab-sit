@@ -6,7 +6,6 @@
 package com.xotonic.lab.sit.vehicle;
 
 
-import com.xotonic.lab.sit.Form;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +14,7 @@ import org.apache.logging.log4j.Logger;
  */
 public interface Behavior {
 
-    Logger log = LogManager.getLogger(Form.class.getName());
+    Logger log = LogManager.getLogger(Behavior.class.getName());
 
     void start();
 

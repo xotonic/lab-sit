@@ -23,15 +23,8 @@ public class Form extends JDialog implements KeyListener, SettingsView {
 
     private JPanel contentPane;
     private JPanel drawPanel;
-    private JPanel propertiesPanel;
-    private JButton sideBarStart;
-    private JButton sideBarStop;
-    private JCheckBox sideBarInfoToggle;
-    private JRadioButton sideBarTimeShow;
-    private JRadioButton sideBarTimeHide;
-    private JButton toolbarStartStop;
-    private JButton toolbarInfo;
-    private JButton tollbarTime;
+
+
     private JPanel factoriesSettingsPanel;
 
     private DrawPanel drawer;
@@ -47,9 +40,10 @@ public class Form extends JDialog implements KeyListener, SettingsView {
     private SideBarView sideBarView;
 
     public Form() {
-        setContentPane(contentPane);
         setModal(true);
         addKeyListener(this);
+
+        createDrawPanel();
 
         habitat.getPainters().add(painter);
 
@@ -62,26 +56,30 @@ public class Form extends JDialog implements KeyListener, SettingsView {
         settingsController.setModel(settingsModel);
 
         menuView = new MenuView();
+        toolBarView = new ToolBarView();
+        sideBarView = new SideBarView();
+
+        menuView.initializeUI();
+        toolBarView.initializeUI();
+        sideBarView.initializeUI();
+
         menuView.setController(settingsController);
         settingsController.addView(menuView);
-        setJMenuBar(menuView.getMenuBar());
+        setJMenuBar(menuView.getRootComponent());
 
-        toolBarView = new ToolBarView(toolbarStartStop, toolbarInfo, tollbarTime);
         toolBarView.setController(settingsController);
         settingsController.addView(toolBarView);
 
-        sideBarView = new SideBarView(
-                sideBarStart,
-                sideBarStop,
-                sideBarInfoToggle,
-                sideBarTimeShow,
-                sideBarTimeHide
-        );
 
         sideBarView.setController(settingsController);
         settingsController.addView(sideBarView);
 
+
+        initializeUI();
+
         settingsController.addView(this);
+
+        setContentPane(contentPane);
 
     }
 
@@ -110,7 +108,7 @@ public class Form extends JDialog implements KeyListener, SettingsView {
         }
     }
 
-    private void createUIComponents() {
+    private void createDrawPanel() {
         DrawPanel panel = new DrawPanel();
         drawPanel = panel;
         painter = panel;
@@ -216,5 +214,65 @@ public class Form extends JDialog implements KeyListener, SettingsView {
     public void OnHideTime() {
         drawer.setShowTime(false);
 
+    }
+
+
+    @Override
+    public void initializeUI() {
+
+
+        contentPane = new JPanel();
+        contentPane.setLayout(new GridBagLayout());
+        contentPane.setInheritsPopupMenu(false);
+        contentPane.setPreferredSize(new Dimension(800, 600));
+        GridBagConstraints gbc1 = new GridBagConstraints();
+        gbc1.gridx = 0;
+        gbc1.gridy = 0;
+        gbc1.weightx = 1.0;
+        gbc1.fill = GridBagConstraints.HORIZONTAL;
+
+        contentPane.add(toolBarView.getRootComponent(), gbc1);
+
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+         panel1.add(sideBarView.getRootComponent(), gbc);
+
+        GridBagConstraints gbc0 = new GridBagConstraints();
+        gbc0.gridx = 0;
+        gbc0.gridy = 1;
+        gbc0.weightx = 1.0;
+        gbc0.weighty = 1.0;
+        gbc0.fill = GridBagConstraints.BOTH;
+        contentPane.add(panel1, gbc0);
+
+
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridBagLayout());
+        GridBagConstraints gbc3 = new GridBagConstraints();
+        gbc3.gridx = 0;
+        gbc3.gridy = 0;
+        gbc3.weightx = 1.0;
+        gbc3.weighty = 1.0;
+        gbc3.fill = GridBagConstraints.BOTH;
+        panel1.add(panel2, gbc3);
+
+        GridBagConstraints gbc4 = new GridBagConstraints();
+        gbc4.gridx = 0;
+        gbc4.gridy = 0;
+        gbc4.weightx = 1.0;
+        gbc4.weighty = 1.0;
+        gbc4.fill = GridBagConstraints.BOTH;
+        panel2.add(drawPanel, gbc4);
+
+    }
+
+    public JComponent getRootComponent() {
+        return contentPane;
     }
 }

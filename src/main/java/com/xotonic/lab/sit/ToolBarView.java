@@ -9,28 +9,24 @@ import javax.swing.*;
 public class ToolBarView implements SettingsView {
     private SettingsController controller;
 
-    private JButton startStopButton;
-    private JButton infoButton;
-    private JButton timeButton;
+
+
+    private JButton toolbarStartStop;
+    private JButton toolbarInfo;
+    private JButton toolbarTime;
 
     private boolean started, isShowTime, isShowInfo;
-
-    public ToolBarView(JButton startStopButton, JButton infoButton, JButton timeButton) {
-        this.startStopButton = startStopButton;
-        this.infoButton = infoButton;
-        this.timeButton = timeButton;
-        setListeners();
-    }
+    private JToolBar toolBar;
 
     private void setListeners() {
-        startStopButton.addActionListener(a -> {
+        toolbarStartStop.addActionListener(a -> {
             if (started) controller.setStop();
             else controller.setStart();
         });
-        infoButton.addActionListener(a -> {
+        toolbarInfo.addActionListener(a -> {
             controller.setShowInfo(!isShowInfo);
         });
-        timeButton.addActionListener(a -> {
+        toolbarTime.addActionListener(a -> {
             controller.setShowTime(!isShowTime);
         });
 
@@ -42,39 +38,60 @@ public class ToolBarView implements SettingsView {
 
     @Override
     public void OnSimulationStart() {
-        startStopButton.setText("Stop");
+        toolbarStartStop.setText("Stop");
         started = true;
     }
 
     @Override
     public void OnSimulationStop() {
-        startStopButton.setText("Start");
+        toolbarStartStop.setText("Start");
         started = false;
 
     }
 
     @Override
     public void OnShowInfo() {
-        infoButton.setText("Hide info");
+        toolbarInfo.setText("Hide info");
         isShowInfo = true;
     }
 
     @Override
     public void OnHideInfo() {
-        infoButton.setText("Show info");
+        toolbarInfo.setText("Show info");
         isShowInfo = false;
 
     }
 
     @Override
     public void OnShowTime() {
-        timeButton.setText("Hide time");
+        toolbarTime.setText("Hide time");
         isShowTime = true;
     }
 
     @Override
     public void OnHideTime() {
-        timeButton.setText("Show time");
+        toolbarTime.setText("Show time");
         isShowTime = false;
+    }
+
+    @Override
+    public void initializeUI() {
+        toolBar = new JToolBar();
+        toolbarStartStop = new JButton();
+        toolbarStartStop.setText("Start");
+        toolBar.add(toolbarStartStop);
+        toolbarInfo = new JButton();
+        toolbarInfo.setText("Info");
+        toolBar.add(toolbarInfo);
+        toolbarTime = new JButton();
+        toolbarTime.setText("Time");
+        toolBar.add(toolbarTime);
+
+        setListeners();
+    }
+
+    @Override
+    public JToolBar getRootComponent() {
+        return toolBar;
     }
 }

@@ -4,6 +4,7 @@ import com.xotonic.lab.sit.settings.SettingsController;
 import com.xotonic.lab.sit.settings.SettingsView;
 
 import javax.swing.*;
+import java.awt.*;
 
 
 public class SideBarView implements SettingsView {
@@ -15,31 +16,7 @@ public class SideBarView implements SettingsView {
     private JCheckBox sideBarInfoToggle;
     private JRadioButton sideBarTimeShow;
     private JRadioButton sideBarTimeHide;
-
-    public SideBarView(
-            JButton sideBarStart,
-            JButton sideBarStop,
-            JCheckBox sideBarInfoToggle,
-            JRadioButton sideBarTimeShow,
-            JRadioButton sideBarTimeHide
-
-            // TODO
-        /*,
-        JPanel factoriesSettingsContainer,
-        JPanel factoryItemPrototype*/
-    ) {
-        this.sideBarStart = sideBarStart;
-        this.sideBarStop = sideBarStop;
-        this.sideBarInfoToggle = sideBarInfoToggle;
-        this.sideBarTimeShow = sideBarTimeShow;
-        this.sideBarTimeHide = sideBarTimeHide;
-
-        ButtonGroup group = new ButtonGroup();
-        group.add(sideBarTimeShow);
-        group.add(sideBarTimeHide);
-
-        setListeners();
-    }
+    private JPanel propertiesPanel;
 
     private void setListeners() {
         sideBarStart.addActionListener(a -> controller.setStart());
@@ -86,5 +63,112 @@ public class SideBarView implements SettingsView {
 
     public void setController(SettingsController controller) {
         this.controller = controller;
+    }
+
+    @Override
+    public void initializeUI() {
+
+        GridBagConstraints gbc;
+        JPanel factoriesSettingsPanel;
+
+        propertiesPanel = new JPanel();
+        propertiesPanel.setLayout(new GridBagLayout());
+
+        propertiesPanel.setBorder(BorderFactory.createTitledBorder("Properties"));
+
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridBagLayout());
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        propertiesPanel.add(panel3, gbc);
+        panel3.setBorder(BorderFactory.createTitledBorder("Simulation control"));
+
+        sideBarStart = new JButton();
+        sideBarStart.setText("Start");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        panel3.add(sideBarStart, gbc);
+        sideBarStop = new JButton();
+        sideBarStop.setText("Stop");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        panel3.add(sideBarStop, gbc);
+        final JPanel panel4 = new JPanel();
+        panel4.setLayout(new GridBagLayout());
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        propertiesPanel.add(panel4, gbc);
+        panel4.setBorder(BorderFactory.createTitledBorder("Simulation time"));
+
+        sideBarTimeShow = new JRadioButton();
+        sideBarTimeShow.setText("Show");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel4.add(sideBarTimeShow, gbc);
+
+        sideBarTimeHide = new JRadioButton();
+        sideBarTimeHide.setText("Hide");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel4.add(sideBarTimeHide, gbc);
+
+        final JPanel panel5 = new JPanel();
+        panel5.setLayout(new GridBagLayout());
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        propertiesPanel.add(panel5, gbc);
+        panel5.setBorder(BorderFactory.createTitledBorder("Information"));
+        sideBarInfoToggle = new JCheckBox();
+        sideBarInfoToggle.setText("Show");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel5.add(sideBarInfoToggle, gbc);
+
+        factoriesSettingsPanel = new JPanel();
+        factoriesSettingsPanel.setLayout(new GridBagLayout());
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        propertiesPanel.add(factoriesSettingsPanel, gbc);
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(sideBarTimeShow);
+        group.add(sideBarTimeHide);
+
+        setListeners();
+    }
+
+    @Override
+    public JPanel getRootComponent() {
+        return propertiesPanel;
     }
 }

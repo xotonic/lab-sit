@@ -4,13 +4,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 public enum ResourceId {
+
     DEFAULT("default.png"),
     CAR("car.png"),
     BIKE("bike.png");
@@ -34,15 +33,36 @@ public enum ResourceId {
 
     private BufferedImage loadResource(String resourcePath) {
         Logger log = LogManager.getLogger(ResourceId.class.getName());
+        log.debug("Loading resource '{}' with path '{}'", name(), resourcePath);
         try {
-            URL url = getClass().getClassLoader().getResource(resourcePath);
             BufferedImage image;
-            log.debug("Loading resource '{}' with path '{}'", name(), resourcePath);
-            image = ImageIO.read(new File((url.toURI().getPath())));
+            image = ImageIO.read(getClass().getResource(resourcePath));
             return image;
-        } catch (IOException | URISyntaxException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
-            return new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
+            return getFailedLoadingImage();
+        }
+        catch (Exception e)
+        {
+            log.error("Exception during loading resource", e);
+            return getFailedLoadingImage();
         }
     }
+
+
+    private BufferedImage getFailedLoadingImage() {
+        Logger log = LogManager.getLogger(ResourceId.class.getName());
+
+        log.debug("o/");
+
+        BufferedImage image = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = image.createGraphics();
+        g.setColor(Color.RED);
+        g.drawString("fail " + name(), 5, 20);
+        g.drawRect(1, 1,62, 62);
+        image.flush();
+        return image;
+    }
+
+
 }

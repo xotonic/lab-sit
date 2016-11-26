@@ -20,12 +20,8 @@ public class MenuView implements SettingsView {
     private JRadioButtonMenuItem hideTimeItem;
 
 
-    public MenuView() {
-        createMenuBar();
-    }
-
-
-    private void createMenuBar() {
+    @Override
+    public void initializeUI() {
         JMenu menuFile, menuSimulation;
 
         //Create the menu bar.
@@ -74,9 +70,6 @@ public class MenuView implements SettingsView {
         hideTimeItem.addActionListener(a -> controller.setShowTime(false));
     }
 
-    public JMenuBar getMenuBar() {
-        return menuBar;
-    }
 
     public void setController(SettingsController c) {
         controller = c;
@@ -116,4 +109,8 @@ public class MenuView implements SettingsView {
         hideTimeItem.setSelected(true);
     }
 
+    @Override
+    public JMenuBar getRootComponent() {
+        return menuBar;
+    }
 }
