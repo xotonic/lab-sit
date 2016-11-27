@@ -6,7 +6,12 @@ import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 
-public interface SettingsView<T extends JComponent> extends HasUI<T> {
+public interface SettingsView<RootComponent extends JComponent,
+                              SettingsControllerType extends SettingsController>
+
+        extends HasUI<RootComponent>,
+                View<SettingsControllerType>
+{
 
     Logger log = LogManager.getLogger(SettingsView.class.getName());
 

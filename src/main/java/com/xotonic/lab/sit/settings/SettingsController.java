@@ -7,7 +7,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class SettingsController {
+public class SettingsController implements Controller<SettingsModel, SettingsView>
+{
+
     Logger log = LogManager.getLogger(SettingsController.class.getName());
 
     private Collection<SettingsView> views = new ArrayList<>();
@@ -79,14 +81,6 @@ public class SettingsController {
 
         model.showInfo = show;
         updateShowInfo();
-    }
-
-    public void setFactoryPeriod(SettingsModel.FactoryType type, float cooldown) {
-        model.factoriesSettings.get(type).bornPeriod = cooldown;
-    }
-
-    public void setFactoryChance(SettingsModel.FactoryType type, float chance) {
-        model.factoriesSettings.get(type).bornChance = chance;
     }
 
 }

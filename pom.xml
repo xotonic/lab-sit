@@ -43,7 +43,7 @@
                     <archive>
                         <manifest>
                             <!-- Jar file entry point -->
-                            <mainClass>com.xotonic.lab.sit.Form</mainClass>
+                            <mainClass>com.xotonic.lab.sit.ui.Form</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -59,7 +59,7 @@
                     <archive>
                         <manifest>
                             <!-- Jar file entry point -->
-                            <mainClass>com.xotonic.lab.sit.Form</mainClass>
+                            <mainClass>com.xotonic.lab.sit.ui.Form</mainClass>
                         </manifest>
                     </archive>
                     <appendAssemblyId>false</appendAssemblyId>

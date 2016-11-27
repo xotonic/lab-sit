@@ -5,7 +5,7 @@
  */
 package com.xotonic.lab.sit.vehicle;
 
-import com.xotonic.lab.sit.ResourceId;
+import com.xotonic.lab.sit.ui.ResourceId;
 
 /**
  * @author User
