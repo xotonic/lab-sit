@@ -14,7 +14,6 @@ public enum ResourceId {
     CAR("car.png"),
     BIKE("bike.png");
 
-    static Logger log = LogManager.getLogger(ResourceId.class.getName());
     private String resourcePath;
     private BufferedImage image;
 

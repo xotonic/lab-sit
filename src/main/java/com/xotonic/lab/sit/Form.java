@@ -18,26 +18,29 @@ import java.awt.event.KeyListener;
 
 public class Form extends JDialog implements KeyListener, SettingsView {
 
-    static Logger log = LogManager.getLogger(Form.class.getName());
+    private static Logger log = LogManager.getLogger(Form.class.getName());
 
 
     private JPanel contentPane;
     private JPanel drawPanel;
 
-
-    private JPanel factoriesSettingsPanel;
-
-    private DrawPanel drawer;
     private Habitat habitat = new SimpleHabitat();
     private TimedLuckyFactory carFactory = new CarFactory(habitat);
     private TimedLuckyFactory bikeFactory = new BikeFactory(habitat);
+
     private Painter painter;
+    private DrawPanel drawer;
     private SimulationTimer timer;
+
+
     private SettingsModel settingsModel;
     private SettingsController settingsController;
+
+
     private MenuView menuView;
     private ToolBarView toolBarView;
     private SideBarView sideBarView;
+
 
     public Form() {
         setModal(true);
@@ -52,34 +55,27 @@ public class Form extends JDialog implements KeyListener, SettingsView {
 
         settingsModel = new SettingsModel();
 
-        settingsController = new SettingsController();
-        settingsController.setModel(settingsModel);
-
         menuView = new MenuView();
         toolBarView = new ToolBarView();
         sideBarView = new SideBarView();
 
+        log.debug("Initializing UI");
         menuView.initializeUI();
         toolBarView.initializeUI();
         sideBarView.initializeUI();
-
-        menuView.setController(settingsController);
-        settingsController.addView(menuView);
-        setJMenuBar(menuView.getRootComponent());
-
-        toolBarView.setController(settingsController);
-        settingsController.addView(toolBarView);
-
-
-        sideBarView.setController(settingsController);
-        settingsController.addView(sideBarView);
-
-
         initializeUI();
 
+        log.debug("Initializing settings system");
+        settingsController = new SettingsController();
+        settingsController.setModel(settingsModel);
+        settingsController.addView(menuView);
+        settingsController.addView(toolBarView);
+        settingsController.addView(sideBarView);
         settingsController.addView(this);
 
-        setContentPane(contentPane);
+        menuView.setController(settingsController);
+        toolBarView.setController(settingsController);
+        sideBarView.setController(settingsController);
 
     }
 
@@ -269,6 +265,10 @@ public class Form extends JDialog implements KeyListener, SettingsView {
         gbc4.weighty = 1.0;
         gbc4.fill = GridBagConstraints.BOTH;
         panel2.add(drawPanel, gbc4);
+
+        setJMenuBar(menuView.getRootComponent());
+
+        setContentPane(contentPane);
 
     }
 
