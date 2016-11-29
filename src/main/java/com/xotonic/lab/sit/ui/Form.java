@@ -14,7 +14,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class Form extends JDialog
+public class Form extends JFrame
         implements KeyListener,
                    SettingsView<JPanel, SettingsController>
 {
@@ -32,7 +32,7 @@ public class Form extends JDialog
     private Painter painter;
     private DrawPanel drawer;
     private SimulationTimer timer;
-
+    private StatisticDialog statisticDialog;
 
     private SettingsModel settingsModel;
     private SettingsController settingsController;
@@ -46,8 +46,14 @@ public class Form extends JDialog
     private FactoryOptionsView carsSettingsView;
     private FactoryOptionsView bikesSettingsView;
 
+    /*
+    TODO  * статистика в окне ( не останавливается симуляция после окна)
+    TODO комбобокс вместо текстового поля
+    TODO окно при неправильном вводе
+     */
+
     public Form() {
-        setModal(true);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         addKeyListener(this);
 
         createDrawPanel();
@@ -56,6 +62,9 @@ public class Form extends JDialog
 
         timer = new SimulationTimer();
         timer.setTarget(habitat);
+
+        statisticDialog = new StatisticDialog(this);
+        statisticDialog.setOnConfirmListener( () -> timer.reset()); // controller.setStop();
 
         settingsModel = new SettingsModel();
         factoriesModel = new FactorySettingsModel();
@@ -105,11 +114,13 @@ public class Form extends JDialog
         log.debug("Program start");
         setLookAndFeel();
 
-        final Form dialog = new Form();
-        dialog.pack();
-        dialog.setVisible(true);
+        SwingUtilities.invokeLater( () ->
+        {
+            final Form dialog = new Form();
+            dialog.pack();
+            dialog.setVisible(true);
+        });
         log.debug("Program exit");
-        System.exit(0);
     }
 
     private static void setLookAndFeel() {
@@ -199,16 +210,19 @@ public class Form extends JDialog
     }
 
     private void stopSimulation() {
-        reportStatistic();
-        timer.reset();
+        if (settingsModel.showInfo)
+            reportStatistic();
     }
 
     private void reportStatistic() {
+        log.debug("o/");
         Statistic statistic = new Statistic();
         statistic.setTotalCarsCreated(carFactory.getTotalCreated());
         statistic.setTotalBikesCreated(bikeFactory.getTotalCreated());
         statistic.setTotalTime(timer.getSimulationTime());
         drawer.setStatistic(statistic);
+        statisticDialog.setStatistic(statistic);
+        statisticDialog.show();
     }
 
     @Override
@@ -304,51 +318,6 @@ public class Form extends JDialog
     @Override
     public void setController(SettingsController controller) {
         this.settingsController = controller;
-    }
-
-    private class FactoryManipulator
-            implements FactorySettingsView<JComponent, FactorySettingsController>
-    {
-        private TimedLuckyFactory factory;
-        private FactoryType ftype;
-
-        private FactoryManipulator(TimedLuckyFactory factory, FactoryType ftype) {
-            this.factory = factory;
-            this.ftype = ftype;
-        }
-
-        @Override
-        public void setController(FactorySettingsController controller) {
-        }
-
-        @Override
-        public void initializeUI() {
-
-        }
-
-        @Override
-        public JComponent getRootComponent() {
-            return null;
-        }
-
-        @Override
-        public void OnBornPeriodChanged(int bornPeriod) {
-            factory.setCooldown(bornPeriod);
-        }
-
-        @Override
-        public void OnBornChanceChanged(float bornChance) {
-            factory.setCreateChance(bornChance);
-        }
-
-        @Override
-        public FactoryType getFactoryType() {
-            return ftype;
-        }
-
-        @Override
-        public void setFactoryType(FactoryType type) {
-        }
     }
 
 }
