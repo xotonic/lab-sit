@@ -16,7 +16,7 @@ public class StatisticDialog {
     private OnCancelListener onCancelListener;
 
     private JDialog dialog;
-    private JTextArea area;
+    private JTextPane area;
     private JButton ok;
     private JButton cancel;
     private Frame parent;
@@ -41,9 +41,7 @@ public class StatisticDialog {
         rootPanel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
-        area = new JTextArea();
-        area.setColumns(40);
-        area.setRows(40);
+        area = new JTextPane();
         area.setEnabled(false);
         c.gridx = 0;
         c.gridy = 0;
@@ -84,7 +82,10 @@ public class StatisticDialog {
     void show()
     {
         log.debug("o/");
-        String text = String.format("Total cars: %s\nTotal bikes: %s\nTotal time:%s",
+        area.setContentType("text/html");
+        String text = String.format("<b><font size=\"5\" face=\"Arial\">Total cars: %s</font><br></b>"+
+                "<font size=\"5\"><u>Total bikes: %s</u></font><br>"+
+                "<font size=\"5\"><i>Total time:%s</i></font>",
                 statistic.getTotalCarsCreated(),
                 statistic.getTotalBikesCreated(),
                 statistic.getTotalTime());

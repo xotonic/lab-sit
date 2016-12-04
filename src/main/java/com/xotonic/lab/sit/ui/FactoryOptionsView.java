@@ -9,7 +9,9 @@ import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FactoryOptionsView implements FactorySettingsView<JPanel, FactorySettingsController> {
@@ -26,24 +28,29 @@ public class FactoryOptionsView implements FactorySettingsView<JPanel, FactorySe
     private FactoryType factoryType;
     private JPanel root;
     private JTextField bornPeriodField;
-    private JTextField bornChanceField;
+
+    private JComboBox<Float> bornChanceCombo;
+    private Float[] chances = new Float[] {
+            0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f};
 
     public FactoryOptionsView(FactoryType type)
     {
         setFactoryType(type);
     }
 
-    private static void success(JTextField bornPeriodField) {
+    private void success(JTextField bornPeriodField) {
         bornPeriodField.setForeground(Color.BLACK);
         bornPeriodField.setBackground(Color.GREEN);
     }
 
-    private static void fail(JTextField bornChanceField) {
+    private void fail(JTextField bornChanceField) {
         bornChanceField.setForeground(Color.BLACK);
         bornChanceField.setBackground(Color.RED);
+
+        JOptionPane.showMessageDialog(root, "Error in " + localizedFactoryNames.get(factoryType));
     }
 
-    private static void initial(JTextField bornPeriodField) {
+    private void initial(JTextField bornPeriodField) {
         bornPeriodField.setForeground(Color.BLACK);
         bornPeriodField.setBackground(Color.WHITE);
     }
@@ -61,8 +68,11 @@ public class FactoryOptionsView implements FactorySettingsView<JPanel, FactorySe
         root = new JPanel();
         root.setLayout(new GridBagLayout());
 
-        bornChanceField = new JTextField();
-        bornChanceField.setColumns(5);
+        bornChanceCombo = new JComboBox<>();
+        bornChanceCombo.setEditable(false);
+        for (int chance = 0; chance < chances.length; chance++) {
+            bornChanceCombo.addItem(chances[chance]);
+        }
 
         bornPeriodField = new JTextField();
         bornPeriodField.setColumns(5);
@@ -76,12 +86,12 @@ public class FactoryOptionsView implements FactorySettingsView<JPanel, FactorySe
 
         root.add(bornPeriodField, gbc);
         gbc.gridy = 1;
-        root.add(bornChanceField, gbc);
+        root.add(bornChanceCombo, gbc);
 
         root.setBorder(BorderFactory.createTitledBorder(localizedFactoryNames.get(factoryType)));
 
 
-        bornChanceField.addActionListener(evt -> {
+        bornChanceCombo.addActionListener(evt -> {
             log.debug("chance");
             updateBornChance();
         });
@@ -109,17 +119,13 @@ public class FactoryOptionsView implements FactorySettingsView<JPanel, FactorySe
 
     private void updateBornChance() {
         log.debug("o/");
-        try {
-            controller.setBornChance(
-                    this,
-                    Float.parseFloat(bornChanceField.getText()));
-            success(bornChanceField);
 
-        }
-        catch (NumberFormatException e)
-        {
-            fail(bornChanceField);
-        }
+        Float selected = bornChanceCombo.getItemAt(bornChanceCombo.getSelectedIndex());
+        if (selected!=null && controller!=null)
+            controller.setBornChance(this, selected);
+        else
+            log.debug("Skip updating");
+
     }
 
     @Override
@@ -136,9 +142,16 @@ public class FactoryOptionsView implements FactorySettingsView<JPanel, FactorySe
 
     @Override
     public void OnBornChanceChanged(float bornChance) {
-        bornChanceField.setText(Float.toString(bornChance));
-        initial(bornChanceField);
+        int nextSelected = bornChanceCombo.getItemCount();
 
+        List<Float> floats = Arrays.asList(chances);
+        if (floats.contains(bornChance))
+            bornChanceCombo.setSelectedIndex(floats.indexOf(bornChance));
+        else
+        {
+            bornChanceCombo.addItem(bornChance);
+            bornChanceCombo.setSelectedIndex(nextSelected);
+        }
     }
 
     @Override

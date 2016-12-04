@@ -47,9 +47,7 @@ public class Form extends JFrame
     private FactoryOptionsView bikesSettingsView;
 
     /*
-    TODO  * статистика в окне ( не останавливается симуляция после окна)
-    TODO комбобокс вместо текстового поля
-    TODO окно при неправильном вводе
+    TODO управление клавишами не работает
      */
 
     public Form() {
@@ -65,7 +63,7 @@ public class Form extends JFrame
 
         statisticDialog = new StatisticDialog(this);
         statisticDialog.setOnConfirmListener( () -> timer.reset()); // controller.setStop();
-
+        statisticDialog.setOnCancelListener(() -> settingsController.setStart());
         settingsModel = new SettingsModel();
         factoriesModel = new FactorySettingsModel();
 
@@ -169,6 +167,7 @@ public class Form extends JFrame
 
     @Override
     public void keyPressed(KeyEvent e) {
+        log.debug("KEY %s", e.getKeyChar());
         switch (e.getKeyChar()) {
             case 'b':
                 startSimulation();
@@ -210,17 +209,29 @@ public class Form extends JFrame
     }
 
     private void stopSimulation() {
+        Statistic stats =  getStatistic();
+
+        showCanvasStatistic(stats);
+
         if (settingsModel.showInfo)
-            reportStatistic();
+            showStatisticDialog(stats);
+        else timer.reset();
     }
 
-    private void reportStatistic() {
+    private Statistic getStatistic() {
         log.debug("o/");
         Statistic statistic = new Statistic();
         statistic.setTotalCarsCreated(carFactory.getTotalCreated());
         statistic.setTotalBikesCreated(bikeFactory.getTotalCreated());
         statistic.setTotalTime(timer.getSimulationTime());
+        return statistic;
+    }
+
+    private void showCanvasStatistic(Statistic statistic) {
         drawer.setStatistic(statistic);
+    }
+
+    private void showStatisticDialog(Statistic statistic) {
         statisticDialog.setStatistic(statistic);
         statisticDialog.show();
     }
@@ -307,7 +318,6 @@ public class Form extends JFrame
         sideBarView.addFactorySettingsView(bikesSettingsView);
 
         setContentPane(contentPane);
-
     }
 
     public JPanel getRootComponent() {

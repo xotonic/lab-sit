@@ -40,8 +40,10 @@ public class MenuView implements SettingsView<JMenuBar, SettingsController> {
 
         //a group of JMenuItems
         startItem = new JMenuItem("Start");
+        startItem.setAccelerator(KeyStroke.getKeyStroke('b'));
         menuSimulation.add(startItem);
         stopItem = new JMenuItem("Stop");
+        stopItem.setAccelerator(KeyStroke.getKeyStroke('e'));
         menuSimulation.add(stopItem);
 
         //a group of radio button menu items
@@ -53,6 +55,7 @@ public class MenuView implements SettingsView<JMenuBar, SettingsController> {
         menuSimulation.add(showTimeItem);
 
         hideTimeItem = new JRadioButtonMenuItem("Hide simulation time");
+        hideTimeItem.setAccelerator(KeyStroke.getKeyStroke('t'));
         group.add(hideTimeItem);
         menuSimulation.add(hideTimeItem);
         //a group of check box menu items
@@ -85,6 +88,7 @@ public class MenuView implements SettingsView<JMenuBar, SettingsController> {
         log.debug("o/");
         stopItem.setEnabled(false);
         startItem.setEnabled(true);
+
     }
 
     @Override
@@ -100,6 +104,7 @@ public class MenuView implements SettingsView<JMenuBar, SettingsController> {
     @Override
     public void OnShowTime() {
         showTimeItem.setSelected(true);
+
     }
 
     @Override
