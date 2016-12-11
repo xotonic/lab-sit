@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 
+/** Панель отрисовки */
 class DrawPanel extends JPanel implements Painter {
     private Collection<Vehicle> vehicles;
     private long lastUpdatedTime = 0;
@@ -38,6 +39,7 @@ class DrawPanel extends JPanel implements Painter {
     }
 
 
+    /** Отрисовка  */
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -111,6 +113,7 @@ class DrawPanel extends JPanel implements Painter {
 
     }
 
+    /** Рисуем текст статистики */
     private void drawLinesCenter(Graphics g, String... lines) {
         Color temp = g.getColor();
         Font font = new Font("Consolas", 1, 36);
@@ -132,6 +135,7 @@ class DrawPanel extends JPanel implements Painter {
         g.setColor(temp);
     }
 
+    /** Рисуем текст в углу */
     private void drawLinesTopLeft(Graphics g, String... lines) {
         Color temp = g.getColor();
         Font font = new Font("Arial", 1, 12);

@@ -14,6 +14,8 @@ import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/** Главная форма */
+
 public class Form extends JFrame
         implements KeyListener,
                    SettingsView<JPanel, SettingsController>
@@ -21,34 +23,49 @@ public class Form extends JFrame
 
     private static Logger log = LogManager.getLogger(Form.class.getName());
 
-
+    /**
+     * Главная панель
+     */
     private JPanel contentPane;
+    /**
+     * Панель для отрисовки
+     */
     private JPanel drawPanel;
 
+    /** Окружение */
     private Habitat habitat = new SimpleHabitat();
+    /** Фабрика машин */
     private TimedLuckyFactory carFactory = new CarFactory(habitat);
+    /** Фабрика мотоциклов */
     private TimedLuckyFactory bikeFactory = new BikeFactory(habitat);
 
+    /* Вспомогательные классы */
     private Painter painter;
     private DrawPanel drawer;
     private SimulationTimer timer;
     private StatisticDialog statisticDialog;
 
+    /* - Система MVC - */
+
+    /* Модели */
     private SettingsModel settingsModel;
     private SettingsController settingsController;
 
+    /* MVC для настроек фабрик */
     private FactorySettingsModel factoriesModel;
     private FactorySettingsController factoriesController;
 
+    /* Вьюшки */
+    /** Меню */
     private MenuView menuView;
+    /** Панель инструментов */
     private ToolBarView toolBarView;
+    /** Боковая панель */
     private SideBarView sideBarView;
+    /** Панель настройки фабрики машин */
     private FactoryOptionsView carsSettingsView;
+    /** Панель настройки фабрики байков */
     private FactoryOptionsView bikesSettingsView;
-
-    /*
-    TODO управление клавишами не работает
-     */
 
     public Form() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -121,6 +138,7 @@ public class Form extends JFrame
         log.debug("Program exit");
     }
 
+    /** Установка цветовой схемы */
     private static void setLookAndFeel() {
         UIManager.put("nimbusBase", new Color(49, 247, 255));
         UIManager.put("nimbusBlueGrey", new Color(49, 51, 53));
@@ -134,6 +152,7 @@ public class Form extends JFrame
         }
     }
 
+    /** Создать панель отрисовки */
     private void createDrawPanel() {
         DrawPanel panel = new DrawPanel();
         drawPanel = panel;
@@ -259,7 +278,8 @@ public class Form extends JFrame
     }
 
 
-    @Override
+   /** Создать интерфейс */
+ @Override
     public void initializeUI() {
 
 

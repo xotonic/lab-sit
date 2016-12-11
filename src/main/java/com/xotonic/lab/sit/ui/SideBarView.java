@@ -6,7 +6,7 @@ import com.xotonic.lab.sit.settings.SettingsView;
 import javax.swing.*;
 import java.awt.*;
 
-
+/** Боковая панель */
 public class SideBarView implements SettingsView<JPanel, SettingsController>{
 
     private SettingsController controller;
@@ -62,8 +62,8 @@ public class SideBarView implements SettingsView<JPanel, SettingsController>{
         sideBarTimeHide.setSelected(true);
     }
 
-
-    @Override
+   /** Создать интерфейс */
+ @Override
     public void initializeUI() {
 
         GridBagConstraints gbc;

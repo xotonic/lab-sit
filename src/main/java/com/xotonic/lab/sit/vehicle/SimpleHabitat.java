@@ -8,6 +8,7 @@ package com.xotonic.lab.sit.vehicle;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/** Единственная реализация класса среды */
 public class SimpleHabitat extends Habitat {
 
     private Collection<Vehicle> vehicles;
@@ -20,6 +21,7 @@ public class SimpleHabitat extends Habitat {
         painters = new ArrayList<>();
     }
 
+    /** Обновляем все */
     @Override
     public void update(long timeMillis) {
         log.trace("SimpleHabitat update ...");
@@ -40,6 +42,7 @@ public class SimpleHabitat extends Habitat {
 
     }
 
+    /** Запускаем все */
     @Override
     public void start() {
         log.debug("SimpleHabitat start ...");
@@ -51,6 +54,7 @@ public class SimpleHabitat extends Habitat {
         painters.forEach(Behavior::start);
     }
 
+    /** Останавливаем все */
     @Override
     public void stop() {
         log.debug("SimpleHabitat stop ...");

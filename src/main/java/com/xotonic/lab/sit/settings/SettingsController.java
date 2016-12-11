@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/** Стандартный контроллер для всех настроек */
 public class SettingsController implements Controller<SettingsModel, SettingsView>
 {
 

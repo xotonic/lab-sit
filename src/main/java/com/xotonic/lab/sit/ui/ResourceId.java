@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+/** Загрузчик ресурсов */
 public enum ResourceId {
 
     DEFAULT("default.png"),

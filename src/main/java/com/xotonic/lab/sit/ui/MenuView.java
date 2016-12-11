@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 
+/** Меню */
 public class MenuView implements SettingsView<JMenuBar, SettingsController> {
 
     private Logger log = LogManager.getLogger(MenuView.class.getName());
@@ -21,7 +22,8 @@ public class MenuView implements SettingsView<JMenuBar, SettingsController> {
     private JRadioButtonMenuItem hideTimeItem;
 
 
-    @Override
+   /** Создать интерфейс */
+ @Override
     public void initializeUI() {
         JMenu menuFile, menuSimulation;
 

@@ -5,7 +5,7 @@ import com.xotonic.lab.sit.settings.SettingsView;
 
 import javax.swing.*;
 
-
+/** Панель инструментов */
 public class ToolBarView implements SettingsView<JToolBar, SettingsController> {
     private SettingsController controller;
 
@@ -73,7 +73,8 @@ public class ToolBarView implements SettingsView<JToolBar, SettingsController> {
         isShowTime = false;
     }
 
-    @Override
+   /** Создать интерфейс */
+ @Override
     public void initializeUI() {
         toolBar = new JToolBar();
         toolbarStartStop = new JButton();

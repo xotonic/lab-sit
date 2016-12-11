@@ -2,7 +2,7 @@ package com.xotonic.lab.sit.ui;
 
 import java.io.Serializable;
 
-
+/** Бин статистики */
 public class Statistic implements Serializable {
 
     private int totalCarsCreated;

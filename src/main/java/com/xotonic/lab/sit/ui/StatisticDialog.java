@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import java.awt.*;
 
+/** Окно статистики */
 public class StatisticDialog {
 
     private static  final Logger log = LogManager.getLogger(StatisticDialog.class.getName());
@@ -30,6 +31,7 @@ public class StatisticDialog {
         setupUI();
     }
 
+    /** Инициализация интерфейса */
     private void setupUI() {
         dialog = new JDialog(parent);
         dialog.setLocationRelativeTo(parent);
@@ -79,6 +81,7 @@ public class StatisticDialog {
         this.statistic = statistic;
     }
 
+    /** Показать окно */
     void show()
     {
         log.debug("o/");

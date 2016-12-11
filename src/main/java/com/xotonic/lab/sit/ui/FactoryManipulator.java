@@ -7,7 +7,7 @@ import com.xotonic.lab.sit.vehicle.TimedLuckyFactory;
 
 import javax.swing.*;
 
-
+/** Класс который слушает контроллер фабрик и управляет ей (фабрикой) */
 class FactoryManipulator
         implements FactorySettingsView<JComponent, FactorySettingsController> {
     private TimedLuckyFactory factory;
@@ -22,7 +22,8 @@ class FactoryManipulator
     public void setController(FactorySettingsController controller) {
     }
 
-    @Override
+   /** Создать интерфейс */
+ @Override
     public void initializeUI() {
 
     }

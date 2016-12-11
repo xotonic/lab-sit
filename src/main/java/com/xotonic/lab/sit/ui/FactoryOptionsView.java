@@ -60,7 +60,8 @@ public class FactoryOptionsView implements FactorySettingsView<JPanel, FactorySe
         this.controller = controller;
     }
 
-    @Override
+   /** Создать интерфейс */
+ @Override
     public void initializeUI() {
 
         assert factoryType != null;

@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+/** Вспомогательный класс по Swing */
 public class SwingUtil {
 
     public static void addChangeListener(JTextComponent text, ChangeListener changeListener) {
