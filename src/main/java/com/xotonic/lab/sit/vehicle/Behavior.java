@@ -18,7 +18,7 @@ public interface Behavior {
 
     void start();
 
-    void update(long timeMillis);
+    void update(World world);
 
     void stop();
 }

@@ -13,6 +13,8 @@ import com.xotonic.lab.sit.ui.ResourceId;
 public abstract class Vehicle extends BasicBehavior {
 
     protected ResourceId resourceId = ResourceId.DEFAULT;
+    protected ResourceId resourceIdWhenMovingBack = ResourceId.DEFAULT;
+    protected boolean isMovingBack = false;
     private float x = 0f;
     private float y = 0f;
     private boolean isStarted = false;
@@ -27,8 +29,16 @@ public abstract class Vehicle extends BasicBehavior {
         setId(id);
     }
 
+    public boolean isMovingBack() {
+        return isMovingBack;
+    }
+
+    public void setMovingBack(boolean movingBack) {
+        isMovingBack = movingBack;
+    }
+
     public ResourceId getResourceId() {
-        return resourceId;
+        return !isMovingBack ? resourceIdWhenMovingBack : resourceId;
     }
 
     public float getX() {

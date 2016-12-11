@@ -21,25 +21,24 @@ public class SimpleHabitat extends Habitat {
         painters = new ArrayList<>();
     }
 
-    /** Обновляем все */
+    /** Обновляем все
+     * @param world*/
     @Override
-    public void update(long timeMillis) {
-        log.trace("SimpleHabitat update ...");
+    public void update(World world) {
 
         for (Factory f : factories)
-            f.update(timeMillis);
+            f.update(world);
 
         for (Vehicle v : vehicles)
-            if (v.isStarted())
-                v.update(timeMillis);
+            if (v.isStarted()) {
+                v.update(world);
+            }
             else
                 v.start();
-
         for (Painter p : painters) {
-            p.update(timeMillis);
+            p.update(world);
             p.onRepaint(vehicles);
         }
-
     }
 
     /** Запускаем все */

@@ -1,9 +1,9 @@
 package com.xotonic.lab.sit.ui;
 
 
-import com.xotonic.lab.sit.settings.FactorySettingsController;
-import com.xotonic.lab.sit.settings.FactorySettingsView;
-import com.xotonic.lab.sit.settings.FactoryType;
+import com.xotonic.lab.sit.settings.factory.FactorySettingsController;
+import com.xotonic.lab.sit.settings.factory.FactorySettingsView;
+import com.xotonic.lab.sit.settings.factory.FactoryType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

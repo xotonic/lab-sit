@@ -2,22 +2,22 @@ package com.xotonic.lab.sit.ui;
 
 import com.xotonic.lab.sit.vehicle.Behavior;
 import com.xotonic.lab.sit.vehicle.Habitat;
+import com.xotonic.lab.sit.vehicle.MutableWorld;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 
-/**
- * Created by xotonic on 01.10.2016.
- */
+
 public class SimulationTimer {
 
     private static Logger log = LogManager.getLogger(Form.class.getName());
 
     private Timer timer;
     private Habitat target;
+    private MutableWorld world;
     private boolean started = false;
-    private int delay = 30;
+    private int delay = 1;
     private long simulationTime = 0;
     private long simulationStartTime = -1;
     public SimulationTimer() {
@@ -42,7 +42,8 @@ public class SimulationTimer {
             if (simulationStartTime == -1)
                 simulationStartTime = System.currentTimeMillis();
             simulationTime = System.currentTimeMillis() - simulationStartTime;
-            this.target.update(simulationTime);
+            world.setTimeMillis(simulationTime);
+            this.target.update(world);
         });
     }
 
@@ -86,4 +87,7 @@ public class SimulationTimer {
         } else log.warn("Already stopped");
     }
 
+    public void setWorld(MutableWorld world) {
+        this.world = world;
+    }
 }

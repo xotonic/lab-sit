@@ -1,8 +1,15 @@
 package com.xotonic.lab.sit.ui;
 
-import com.xotonic.lab.sit.settings.*;
+import com.xotonic.lab.sit.settings.factory.FactorySettingsController;
+import com.xotonic.lab.sit.settings.factory.FactorySettingsModel;
+import com.xotonic.lab.sit.settings.factory.FactoryType;
+import com.xotonic.lab.sit.settings.settings.SettingsController;
+import com.xotonic.lab.sit.settings.settings.SettingsModel;
+import com.xotonic.lab.sit.settings.settings.SettingsView;
 import com.xotonic.lab.sit.vehicle.*;
 import com.xotonic.lab.sit.vehicle.Painter;
+import com.xotonic.lab.sit.vehicle.bike.BikeFactory;
+import com.xotonic.lab.sit.vehicle.car.CarFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,9 +23,29 @@ import java.awt.event.KeyListener;
 
 /** Главная форма */
 
+ /*
+    TODO
+    1)  создать абстрактный класс AI, описывающий «интеллектуальное поведение» объектов по варианту.
+        Класс должен быть выполнен в виде отдельного потока и работать с коллекцией объектов;
+    2)  реализовать класс AI для каждого из видов объекта, включив в него поведение,
+        описанное в индивидуальном задании по варианту;
+    3)  синхронизовать работу потоков расчета интеллекта объектов с их рисованием.
+        Рисование должно остаться в основном потоке.
+        Синхронизация осуществляется через передачу данных в основной поток;
+    4)  добавить в панель управления кнопки для остановки и возобновления работы интеллекта
+        каждого вида объектов. Реализовать через засыпание/пробуждение потоков;
+    5)  добавить в панель управления выпадающие списки для выставления приоритетов каждого из потоков.
+    6)  реализовать сохранение объектов в файл.
+    7)  реализовать сохранение и загрузку настроек параметров программы в локальный файл.
+
+    Вариант 8
+    1. Автомобили двигаются по оси X от одного края области симуляции до другого со скоростью V.
+    2. Мотоциклы двигаются по оси Y от одного края области симуляции до другого со скоростью V.
+ */
+
 public class Form extends JFrame
         implements KeyListener,
-                   SettingsView<JPanel, SettingsController>
+        SettingsView<JPanel, SettingsController>
 {
 
     private static Logger log = LogManager.getLogger(Form.class.getName());
@@ -32,12 +59,14 @@ public class Form extends JFrame
      */
     private JPanel drawPanel;
 
+    /** Параметры мира */
+    private MutableWorld world;
     /** Окружение */
-    private Habitat habitat = new SimpleHabitat();
+    private Habitat habitat;
     /** Фабрика машин */
-    private TimedLuckyFactory carFactory = new CarFactory(habitat);
+    private TimedLuckyFactory carFactory;
     /** Фабрика мотоциклов */
-    private TimedLuckyFactory bikeFactory = new BikeFactory(habitat);
+    private TimedLuckyFactory bikeFactory;
 
     /* Вспомогательные классы */
     private Painter painter;
@@ -71,12 +100,23 @@ public class Form extends JFrame
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         addKeyListener(this);
 
+        world = new MutableWorld();
+        world.setAreaHeight(600);
+        world.setAreaWidth(800);
+        world.setTimeMillis(0);
+
+        habitat = new SimpleHabitat();
+
+        carFactory = new CarFactory(habitat);
+        bikeFactory = new BikeFactory(habitat);
+
         createDrawPanel();
 
         habitat.getPainters().add(painter);
 
         timer = new SimulationTimer();
         timer.setTarget(habitat);
+        timer.setWorld(world);
 
         statisticDialog = new StatisticDialog(this);
         statisticDialog.setOnConfirmListener( () -> timer.reset()); // controller.setStop();
@@ -286,7 +326,7 @@ public class Form extends JFrame
         contentPane = new JPanel();
         contentPane.setLayout(new GridBagLayout());
         contentPane.setInheritsPopupMenu(false);
-        contentPane.setPreferredSize(new Dimension(800, 600));
+        contentPane.setPreferredSize(new Dimension(world.getAreaWidth(), world.getAreaHeight()));
         GridBagConstraints gbc1 = new GridBagConstraints();
         gbc1.gridx = 0;
         gbc1.gridy = 0;

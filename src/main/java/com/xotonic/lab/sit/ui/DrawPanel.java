@@ -3,10 +3,10 @@ package com.xotonic.lab.sit.ui;
 
 import com.xotonic.lab.sit.vehicle.Painter;
 import com.xotonic.lab.sit.vehicle.Vehicle;
+import com.xotonic.lab.sit.vehicle.World;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
@@ -14,6 +14,8 @@ import java.util.Optional;
 
 /** Панель отрисовки */
 class DrawPanel extends JPanel implements Painter {
+    Font centerFont = new Font("Consolas", 1, 36);
+    Font cornerFont = new Font("Arial", 1, 12);
     private Collection<Vehicle> vehicles;
     private long lastUpdatedTime = 0;
     private boolean started = false;
@@ -75,12 +77,14 @@ class DrawPanel extends JPanel implements Painter {
         g.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
     }
 
-    private void drawVehicles(Graphics g) {
-        for (Vehicle v : vehicles) {
 
-            BufferedImage img = v.getResourceId().getImage();
-            g.drawImage(img, Math.round(v.getX()), Math.round(v.getY()), this);
-        }
+    private void drawVehicles(Graphics g) {
+
+            for (Vehicle v : vehicles) {
+
+                Image img = v.getResourceId().getImage();
+                g.drawImage(img, Math.round(v.getX()), Math.round(v.getY()), this);
+            }
     }
 
 
@@ -92,9 +96,8 @@ class DrawPanel extends JPanel implements Painter {
     }
 
     @Override
-    public void update(long timeMillis) {
-        log.trace("DrawPanel update");
-        lastUpdatedTime = timeMillis;
+    public void update(World world) {
+        lastUpdatedTime = world.getTimeMillis();
         repaint();
     }
 
@@ -116,9 +119,8 @@ class DrawPanel extends JPanel implements Painter {
     /** Рисуем текст статистики */
     private void drawLinesCenter(Graphics g, String... lines) {
         Color temp = g.getColor();
-        Font font = new Font("Consolas", 1, 36);
-        g.setFont(font);
-        FontMetrics metrics = g.getFontMetrics(font);
+        g.setFont(centerFont);
+        FontMetrics metrics = g.getFontMetrics(centerFont);
         Optional<String> longest = Arrays.stream(lines).max((l1, l2) -> l1.length() > l2.length() ? 1 : -1);
         if (longest.isPresent()) {
             boolean isOdd = false;
@@ -138,8 +140,8 @@ class DrawPanel extends JPanel implements Painter {
     /** Рисуем текст в углу */
     private void drawLinesTopLeft(Graphics g, String... lines) {
         Color temp = g.getColor();
-        Font font = new Font("Arial", 1, 12);
-        g.setFont(font);
+
+        g.setFont(cornerFont);
         FontMetrics metrics = g.getFontMetrics(g.getFont());
         int currentX = 10;
         int currentY = 20;

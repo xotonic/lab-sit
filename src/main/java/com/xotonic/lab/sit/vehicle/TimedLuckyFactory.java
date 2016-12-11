@@ -12,14 +12,14 @@ public abstract class TimedLuckyFactory extends Factory {
     private static int id = 1;
 
 
-    int cooldown = 1000;
+    protected int cooldown = 1000;
     private float createChance = 0.5f;
     private Random r = new Random();
     private long time;
     private long prevTimeMillis = 0;
     private int totalCreated = 0;
 
-    TimedLuckyFactory(Habitat habitat) {
+    public TimedLuckyFactory(Habitat habitat) {
         super(habitat);
     }
 
@@ -48,12 +48,12 @@ public abstract class TimedLuckyFactory extends Factory {
     }
 
     @Override
-    public void update(long timeMillis) {
+    public void update(World world) {
         if (createChance > 1f | createChance < 0f)
             log.error("Chance value is not in range [0.0;1.0] (now {})", createChance);
 
-        time += timeMillis - prevTimeMillis;
-        prevTimeMillis = timeMillis;
+        time += world.getTimeMillis() - prevTimeMillis;
+        prevTimeMillis = world.getTimeMillis();
         if (time >= cooldown) {
             time -= cooldown;
             if (r.nextFloat() < createChance)

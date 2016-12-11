@@ -1,7 +1,7 @@
 package com.xotonic.lab.sit.ui;
 
-import com.xotonic.lab.sit.settings.SettingsController;
-import com.xotonic.lab.sit.settings.SettingsView;
+import com.xotonic.lab.sit.settings.settings.SettingsController;
+import com.xotonic.lab.sit.settings.settings.SettingsView;
 
 import javax.swing.*;
 
