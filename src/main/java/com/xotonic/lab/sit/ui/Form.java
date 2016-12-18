@@ -6,8 +6,10 @@ import com.xotonic.lab.sit.settings.factory.FactoryType;
 import com.xotonic.lab.sit.settings.settings.SettingsController;
 import com.xotonic.lab.sit.settings.settings.SettingsModel;
 import com.xotonic.lab.sit.settings.settings.SettingsView;
-import com.xotonic.lab.sit.vehicle.*;
-import com.xotonic.lab.sit.vehicle.Painter;
+import com.xotonic.lab.sit.vehicle.Habitat;
+import com.xotonic.lab.sit.vehicle.MutableWorld;
+import com.xotonic.lab.sit.vehicle.SimpleHabitat;
+import com.xotonic.lab.sit.vehicle.TimedLuckyFactory;
 import com.xotonic.lab.sit.vehicle.bike.BikeFactory;
 import com.xotonic.lab.sit.vehicle.car.CarFactory;
 import org.apache.logging.log4j.LogManager;
@@ -25,13 +27,13 @@ import java.awt.event.KeyListener;
 
  /*
     TODO
-    1)  создать абстрактный класс AI, описывающий «интеллектуальное поведение» объектов по варианту.
-        Класс должен быть выполнен в виде отдельного потока и работать с коллекцией объектов;
-    2)  реализовать класс AI для каждого из видов объекта, включив в него поведение,
-        описанное в индивидуальном задании по варианту;
-    3)  синхронизовать работу потоков расчета интеллекта объектов с их рисованием.
-        Рисование должно остаться в основном потоке.
-        Синхронизация осуществляется через передачу данных в основной поток;
+    1)  --- создать абстрактный класс AI, описывающий «интеллектуальное поведение» объектов по варианту.
+        --- Класс должен быть выполнен в виде отдельного потока и работать с коллекцией объектов;
+    2)  --- реализовать класс AI для каждого из видов объекта, включив в него поведение,
+        --- описанное в индивидуальном задании по варианту;
+    3)  --- синхронизовать работу потоков расчета интеллекта объектов с их рисованием.
+        --- Рисование должно остаться в основном потоке.
+        --- Синхронизация осуществляется через передачу данных в основной поток;
     4)  добавить в панель управления кнопки для остановки и возобновления работы интеллекта
         каждого вида объектов. Реализовать через засыпание/пробуждение потоков;
     5)  добавить в панель управления выпадающие списки для выставления приоритетов каждого из потоков.
@@ -69,9 +71,8 @@ public class Form extends JFrame
     private TimedLuckyFactory bikeFactory;
 
     /* Вспомогательные классы */
-    private Painter painter;
-    private DrawPanel drawer;
-    private SimulationTimer timer;
+    private Canvas canvas;
+    private SimulationHandler simulation;
     private StatisticDialog statisticDialog;
 
     /* - Система MVC - */
@@ -112,14 +113,14 @@ public class Form extends JFrame
 
         createDrawPanel();
 
-        habitat.getPainters().add(painter);
+        simulation = new SimulationHandler();
+        simulation.setHabitat(habitat);
+        simulation.setWorld(world);
+        simulation.setCanvas(canvas);
 
-        timer = new SimulationTimer();
-        timer.setTarget(habitat);
-        timer.setWorld(world);
 
         statisticDialog = new StatisticDialog(this);
-        statisticDialog.setOnConfirmListener( () -> timer.reset()); // controller.setStop();
+        statisticDialog.setOnConfirmListener(() -> simulation.reset()); // controller.setStop();
         statisticDialog.setOnCancelListener(() -> settingsController.setStart());
         settingsModel = new SettingsModel();
         factoriesModel = new FactorySettingsModel();
@@ -194,15 +195,15 @@ public class Form extends JFrame
 
     /** Создать панель отрисовки */
     private void createDrawPanel() {
-        DrawPanel panel = new DrawPanel();
+        Canvas panel = new Canvas();
+
         drawPanel = panel;
-        painter = panel;
-        drawer = panel;
+        canvas = panel;
 
         panel.addComponentListener(new ComponentListener() {
             public void componentResized(ComponentEvent e) {
-                habitat.setWorldWidth(drawer.getWidth());
-                habitat.setWorldHeight(drawer.getHeight());
+                habitat.setWorldWidth(canvas.getWidth());
+                habitat.setWorldHeight(canvas.getHeight());
             }
 
             @Override
@@ -243,11 +244,11 @@ public class Form extends JFrame
     }
 
     private void startSimulation() {
-        timer.start();
+        simulation.start();
     }
 
     private void toggleShowTime() {
-        drawer.setShowTime(!drawer.isShowTime());
+        canvas.setShowTime(!canvas.isShowTime());
     }
 
     @Override
@@ -274,7 +275,7 @@ public class Form extends JFrame
 
         if (settingsModel.showInfo)
             showStatisticDialog(stats);
-        else timer.reset();
+        else simulation.reset();
     }
 
     private Statistic getStatistic() {
@@ -282,12 +283,12 @@ public class Form extends JFrame
         Statistic statistic = new Statistic();
         statistic.setTotalCarsCreated(carFactory.getTotalCreated());
         statistic.setTotalBikesCreated(bikeFactory.getTotalCreated());
-        statistic.setTotalTime(timer.getSimulationTime());
+        statistic.setTotalTime(simulation.getSimulationTime());
         return statistic;
     }
 
     private void showCanvasStatistic(Statistic statistic) {
-        drawer.setStatistic(statistic);
+        canvas.setStatistic(statistic);
     }
 
     private void showStatisticDialog(Statistic statistic) {
@@ -307,13 +308,13 @@ public class Form extends JFrame
 
     @Override
     public void OnShowTime() {
-        drawer.setShowTime(true);
+        canvas.setShowTime(true);
 
     }
 
     @Override
     public void OnHideTime() {
-        drawer.setShowTime(false);
+        canvas.setShowTime(false);
 
     }
 
@@ -322,11 +323,14 @@ public class Form extends JFrame
  @Override
     public void initializeUI() {
 
-
+     int spriteMaxWidth = 155;
+     int spriteMaxHeight = 81;
         contentPane = new JPanel();
         contentPane.setLayout(new GridBagLayout());
         contentPane.setInheritsPopupMenu(false);
-        contentPane.setPreferredSize(new Dimension(world.getAreaWidth(), world.getAreaHeight()));
+     contentPane.setPreferredSize(new Dimension(
+             world.getAreaWidth(),
+             world.getAreaHeight()));
         GridBagConstraints gbc1 = new GridBagConstraints();
         gbc1.gridx = 0;
         gbc1.gridy = 0;

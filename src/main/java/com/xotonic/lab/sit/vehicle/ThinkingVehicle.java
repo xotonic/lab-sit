@@ -28,8 +28,8 @@ public abstract class ThinkingVehicle extends Vehicle {
         this.ai = ai;
     }
 
-    @Override
-    public void update(World world) {
+
+    public void processAI(World world) {
         input.areaHeight = world.getAreaHeight();
         input.areaWidth = world.getAreaWidth();
         input.timestep = world.getTimeMillis() - lastUpdated;

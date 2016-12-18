@@ -11,14 +11,13 @@ import java.util.Collection;
 /** Единственная реализация класса среды */
 public class SimpleHabitat extends Habitat {
 
-    private Collection<Vehicle> vehicles;
+    private ArrayList<Vehicle> vehicles;
     private Collection<Factory> factories;
-    private Collection<Painter> painters;
+
 
     public SimpleHabitat() {
         vehicles = new ArrayList<>();
         factories = new ArrayList<>();
-        painters = new ArrayList<>();
     }
 
     /** Обновляем все
@@ -29,15 +28,17 @@ public class SimpleHabitat extends Habitat {
         for (Factory f : factories)
             f.update(world);
 
+
         for (Vehicle v : vehicles)
             if (v.isStarted()) {
                 v.update(world);
             }
             else
                 v.start();
-        for (Painter p : painters) {
-            p.update(world);
-            p.onRepaint(vehicles);
+
+        synchronized (vehicles) {
+            vehicles.sort((o1, o2) ->
+                    o1.getY() > o2.getY() ? 1 : o1.getY() == o2.getY() ? 0 : -1);
         }
     }
 
@@ -50,7 +51,6 @@ public class SimpleHabitat extends Habitat {
 
         vehicles.forEach(Vehicle::start);
 
-        painters.forEach(Behavior::start);
     }
 
     /** Останавливаем все */
@@ -62,7 +62,6 @@ public class SimpleHabitat extends Habitat {
 
         vehicles.forEach(Vehicle::stop);
 
-        painters.forEach(Behavior::stop);
     }
 
     public Collection<Vehicle> getVehicles() {
@@ -73,9 +72,6 @@ public class SimpleHabitat extends Habitat {
         return factories;
     }
 
-    public Collection<Painter> getPainters() {
-        return painters;
-    }
 
     @Override
     public void reset() {

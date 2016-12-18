@@ -1,9 +1,10 @@
 package com.xotonic.lab.sit.settings.factory;
 
 
-import java.io.Serializable;
+import com.xotonic.lab.sit.settings.Model;
 
-public class FactoryModel implements Serializable {
+
+public class FactoryModel implements Model {
 
     int bornPeriod;
     float bornChance;

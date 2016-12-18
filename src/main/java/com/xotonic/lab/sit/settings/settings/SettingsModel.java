@@ -9,5 +9,11 @@ public class SettingsModel implements Model {
     public boolean showInfo;
     public boolean showTime;
 
-    enum SimulationState {start, stop, pause}
+    public int bikeAIThreadPriority;
+    public int carAIThreadPriority;
+
+    public boolean isCarAIToggled;
+    public boolean isBikeAIToggled;
+
+    enum SimulationState {start, stop}
 }

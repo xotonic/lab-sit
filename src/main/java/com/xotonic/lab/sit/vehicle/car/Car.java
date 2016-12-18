@@ -7,6 +7,8 @@ package com.xotonic.lab.sit.vehicle.car;
 
 import com.xotonic.lab.sit.ui.ResourceId;
 import com.xotonic.lab.sit.vehicle.ThinkingVehicle;
+import com.xotonic.lab.sit.vehicle.VehicleType;
+import com.xotonic.lab.sit.vehicle.World;
 
 /**
  * @author User
@@ -26,5 +28,14 @@ public class Car extends ThinkingVehicle {
         return !isMovingBack ? resourceIdWhenMovingBack : resourceId;
     }
 
+    @Override
+    public VehicleType getType() {
+        return VehicleType.car;
+    }
 
+
+    @Override
+    public void update(World world) {
+
+    }
 }

@@ -71,4 +71,6 @@ public abstract class Vehicle extends BasicBehavior {
     public boolean isStarted() {
         return isStarted;
     }
+
+    public abstract VehicleType getType();
 }

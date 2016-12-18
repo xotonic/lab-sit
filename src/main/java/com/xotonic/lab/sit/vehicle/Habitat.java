@@ -10,10 +10,8 @@ public abstract class Habitat extends BasicBehavior {
     private int worldHeight;
 
     public abstract Collection<Vehicle> getVehicles();
-
     public abstract Collection<Factory> getFactories();
 
-    public abstract Collection<Painter> getPainters();
 
     public abstract void reset();
 

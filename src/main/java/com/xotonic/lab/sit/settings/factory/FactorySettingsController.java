@@ -5,21 +5,15 @@ import com.xotonic.lab.sit.settings.Controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class FactorySettingsController
-        implements Controller<FactorySettingsModel, FactorySettingsView>
+        extends Controller<FactorySettingsModel, FactorySettingsView>
 {
     private static Logger log = LogManager.getLogger(FactorySettingsController.class.getName());
 
 
-    private FactorySettingsModel model;
-    private Collection<FactorySettingsView> views = new ArrayList<>();
-
     @Override
     public void setModel(FactorySettingsModel model) {
-        this.model = model;
+        super.setModel(model);
         updateFullDefault();
     }
 
@@ -35,7 +29,7 @@ public class FactorySettingsController
 
     @Override
     public void addView(FactorySettingsView view) {
-        views.add(view);
+        super.addView(view);
         updateFullDefault();
     }
 

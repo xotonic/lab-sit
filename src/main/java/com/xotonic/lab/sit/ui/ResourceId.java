@@ -14,8 +14,8 @@ public enum ResourceId {
     DEFAULT("default.png"),
     CAR("car.png"),
     CAR_BACK("car_back.png"),
-    BIKE("bike.png"),
-    BIKE_BACK("bike_back.png");
+    BIKE("bike_back.png"),
+    BIKE_BACK("bike.png");
 
     private String resourcePath;
     private BufferedImage image;

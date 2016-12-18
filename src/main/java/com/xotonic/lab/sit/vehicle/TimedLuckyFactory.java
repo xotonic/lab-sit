@@ -75,7 +75,9 @@ public abstract class TimedLuckyFactory extends Factory {
     @Override
     public void build() {
         Vehicle v = create();
-        habitat.getVehicles().add(v);
+        synchronized (habitat.getVehicles()) {
+            habitat.getVehicles().add(v);
+        }
         totalCreated++;
     }
 }

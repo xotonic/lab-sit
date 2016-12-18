@@ -1,5 +1,6 @@
 package com.xotonic.lab.sit.vehicle.bike;
 
+import com.xotonic.lab.sit.MyMath;
 import com.xotonic.lab.sit.vehicle.Habitat;
 import com.xotonic.lab.sit.vehicle.TimedLuckyFactory;
 import com.xotonic.lab.sit.vehicle.Vehicle;
@@ -21,11 +22,10 @@ public class BikeFactory extends TimedLuckyFactory {
     public Vehicle create() {
         Bike bike = new Bike(Bike.class.getSimpleName() + "-" + getNextId());
 
-        bike.setX(r.nextFloat() * habitat.getWorldWidth());
-        bike.setY(r.nextFloat() * habitat.getWorldHeight());
+        bike.setX(MyMath.clamp(0.1f, r.nextFloat(), 0.9f) * habitat.getWorldWidth());
+        bike.setY(MyMath.clamp(0.1f, r.nextFloat(), 0.9f) * habitat.getWorldHeight());
         bike.setMovingBack(r.nextBoolean());
         bike.setAi(new BikeAI());
-        log.debug("Created car {}", bike.getId());
         return bike;
     }
 

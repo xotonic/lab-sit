@@ -5,23 +5,16 @@ import com.xotonic.lab.sit.settings.Controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 /** Стандартный контроллер для всех настроек */
-public class SettingsController implements Controller<SettingsModel, SettingsView>
+public class SettingsController extends Controller<SettingsModel, SettingsView>
 {
 
     Logger log = LogManager.getLogger(SettingsController.class.getName());
 
-    private Collection<SettingsView> views = new ArrayList<>();
-    private SettingsModel model;
 
+    @Override
     public void setModel(SettingsModel model) {
-        log.debug("o/");
-
-        this.model = model;
-
+        super.setModel(model);
         updateFull();
     }
 
@@ -51,9 +44,7 @@ public class SettingsController implements Controller<SettingsModel, SettingsVie
     }
 
     public void addView(SettingsView view) {
-        log.debug("o/");
-
-        views.add(view);
+        super.addView(view);
         updateFull();
     }
 
