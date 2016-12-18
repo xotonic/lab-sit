@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
+import java.io.File;
 
 /** Меню */
 public class MenuView implements SettingsView<JMenuBar, SettingsController> {
@@ -20,9 +21,17 @@ public class MenuView implements SettingsView<JMenuBar, SettingsController> {
     private JCheckBoxMenuItem showInfoItem;
     private JRadioButtonMenuItem showTimeItem;
     private JRadioButtonMenuItem hideTimeItem;
+    private JMenuItem openFileItem;
+    private JMenuItem saveFileItem;
+    private Form form;
 
+    public MenuView(Form form) {
+        this.form = form;
+    }
 
-   /** Создать интерфейс */
+    /**
+     * Создать интерфейс
+     */
  @Override
     public void initializeUI() {
         JMenu menuFile, menuSimulation;
@@ -33,9 +42,14 @@ public class MenuView implements SettingsView<JMenuBar, SettingsController> {
         //Build the first menu.
         menuFile = new JMenu("File");
         menuBar.add(menuFile);
-        JMenuItem nopeItem = new JMenuItem("Not implemented");
-        nopeItem.setEnabled(false);
-        menuFile.add(nopeItem);
+     //JMenuItem nopeItem = new JMenuItem("Not implemented");
+     //nopeItem.setEnabled(false);
+     //menuFile.add(nopeItem);
+
+     openFileItem = new JMenuItem("Open");
+     saveFileItem = new JMenuItem("Save");
+     menuFile.add(openFileItem);
+     menuFile.add(saveFileItem);
 
         menuSimulation = new JMenu("Simulation");
         menuBar.add(menuSimulation);
@@ -74,6 +88,24 @@ public class MenuView implements SettingsView<JMenuBar, SettingsController> {
         showInfoItem.addActionListener(a -> controller.setShowInfo(showInfoItem.getState()));
         showTimeItem.addActionListener(a -> controller.setShowInfo(true));
         hideTimeItem.addActionListener(a -> controller.setShowTime(false));
+
+        openFileItem.addActionListener(a -> {
+            JFileChooser fileopen = new JFileChooser();
+            int ret = fileopen.showOpenDialog(null);
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                File file = fileopen.getSelectedFile();
+                form.loadModelsFromFile(file);
+            }
+        });
+
+        saveFileItem.addActionListener(a -> {
+            JFileChooser fileopen = new JFileChooser();
+            int ret = fileopen.showSaveDialog(null);
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                File file = fileopen.getSelectedFile();
+                form.saveModelsToFile(file);
+            }
+        });
     }
 
 

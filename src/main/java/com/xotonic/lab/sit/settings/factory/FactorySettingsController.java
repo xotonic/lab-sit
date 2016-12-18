@@ -2,17 +2,18 @@ package com.xotonic.lab.sit.settings.factory;
 
 
 import com.xotonic.lab.sit.settings.Controller;
+import com.xotonic.lab.sit.settings.TotalModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class FactorySettingsController
-        extends Controller<FactorySettingsModel, FactorySettingsView>
+        extends Controller<TotalModel, FactorySettingsView>
 {
     private static Logger log = LogManager.getLogger(FactorySettingsController.class.getName());
 
 
     @Override
-    public void setModel(FactorySettingsModel model) {
+    public void setModel(TotalModel model) {
         super.setModel(model);
         updateFullDefault();
     }

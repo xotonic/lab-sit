@@ -2,18 +2,19 @@ package com.xotonic.lab.sit.settings.settings;
 
 
 import com.xotonic.lab.sit.settings.Controller;
+import com.xotonic.lab.sit.settings.TotalModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /** Стандартный контроллер для всех настроек */
-public class SettingsController extends Controller<SettingsModel, SettingsView>
+public class SettingsController extends Controller<TotalModel, SettingsView>
 {
 
     Logger log = LogManager.getLogger(SettingsController.class.getName());
 
 
     @Override
-    public void setModel(SettingsModel model) {
+    public void setModel(TotalModel model) {
         super.setModel(model);
         updateFull();
     }
@@ -27,7 +28,7 @@ public class SettingsController extends Controller<SettingsModel, SettingsView>
     }
 
     private void updateSimulationState() {
-        views.forEach(model.simulationState == SettingsModel.SimulationState.start ?
+        views.forEach(model.simulationState == TotalModel.SimulationState.start ?
                 SettingsView::OnSimulationStart : SettingsView::OnSimulationStop);
     }
 
@@ -51,14 +52,14 @@ public class SettingsController extends Controller<SettingsModel, SettingsView>
     public void setStart() {
         log.debug("o/");
 
-        model.simulationState = SettingsModel.SimulationState.start;
+        model.simulationState = TotalModel.SimulationState.start;
         updateSimulationState();
     }
 
     public void setStop() {
         log.debug("o/");
 
-        model.simulationState = SettingsModel.SimulationState.stop;
+        model.simulationState = TotalModel.SimulationState.stop;
         updateSimulationState();
     }
 

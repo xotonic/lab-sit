@@ -1,7 +1,7 @@
 package com.xotonic.lab.sit.ui;
 
-import com.xotonic.lab.sit.settings.settings.AISettingsController;
-import com.xotonic.lab.sit.settings.settings.AISettingsView;
+import com.xotonic.lab.sit.settings.ai.AISettingsController;
+import com.xotonic.lab.sit.settings.ai.AISettingsView;
 import com.xotonic.lab.sit.vehicle.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SimulationHandler implements AISettingsView<AISettingsController> {
 
     private static Logger log = LogManager.getLogger(Form.class.getName());
+    private final AtomicBoolean isBikeAiStarted = new AtomicBoolean();
     private final AtomicBoolean isCarAiStarted = new AtomicBoolean();
     private Habitat habitat;
     private MutableWorld world;
@@ -27,7 +28,6 @@ public class SimulationHandler implements AISettingsView<AISettingsController> {
     private Thread renderThread;
     private Thread carAIThread;
     private Thread bikeAIThread;
-    private AtomicBoolean isBikeAiStarted = new AtomicBoolean();
 
     public SimulationHandler() {
         bikeAIManager = new AIManager(VehicleType.bike);
@@ -251,6 +251,11 @@ public class SimulationHandler implements AISettingsView<AISettingsController> {
 
     @Override
     public void setController(AISettingsController controller) {
+        createThreads();
 
+        controller.setBikeAIToggled(isBikeAiStarted.get());
+        controller.setCarAIToggled(isCarAiStarted.get());
+        controller.setBikeThreadPriority(bikeAIThread.getPriority());
+        controller.setCarThreadPriority(carAIThread.getPriority());
     }
 }

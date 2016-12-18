@@ -1,11 +1,10 @@
 package com.xotonic.lab.sit.ui;
 
+import com.xotonic.lab.sit.settings.TotalModel;
+import com.xotonic.lab.sit.settings.ai.AISettingsController;
 import com.xotonic.lab.sit.settings.factory.FactorySettingsController;
-import com.xotonic.lab.sit.settings.factory.FactorySettingsModel;
 import com.xotonic.lab.sit.settings.factory.FactoryType;
-import com.xotonic.lab.sit.settings.settings.AISettingsController;
 import com.xotonic.lab.sit.settings.settings.SettingsController;
-import com.xotonic.lab.sit.settings.settings.SettingsModel;
 import com.xotonic.lab.sit.settings.settings.SettingsView;
 import com.xotonic.lab.sit.vehicle.Habitat;
 import com.xotonic.lab.sit.vehicle.MutableWorld;
@@ -23,23 +22,23 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.*;
 
 /** Главная форма */
 
  /*
-    TODO
-    1)  --- создать абстрактный класс AI, описывающий «интеллектуальное поведение» объектов по варианту.
-        --- Класс должен быть выполнен в виде отдельного потока и работать с коллекцией объектов;
-    2)  --- реализовать класс AI для каждого из видов объекта, включив в него поведение,
-        --- описанное в индивидуальном задании по варианту;
-    3)  --- синхронизовать работу потоков расчета интеллекта объектов с их рисованием.
-        --- Рисование должно остаться в основном потоке.
-        --- Синхронизация осуществляется через передачу данных в основной поток;
-    4)  добавить в панель управления кнопки для остановки и возобновления работы интеллекта
-        каждого вида объектов. Реализовать через засыпание/пробуждение потоков;
-    5)  добавить в панель управления выпадающие списки для выставления приоритетов каждого из потоков.
-    6)  реализовать сохранение объектов в файл.
-    7)  реализовать сохранение и загрузку настроек параметров программы в локальный файл.
+    1)  .... создать абстрактный класс AI, описывающий «интеллектуальное поведение» объектов по варианту.
+        .... Класс должен быть выполнен в виде отдельного потока и работать с коллекцией объектов;
+    2)  .... реализовать класс AI для каждого из видов объекта, включив в него поведение,
+        .... описанное в индивидуальном задании по варианту;
+    3)  .... синхронизовать работу потоков расчета интеллекта объектов с их рисованием.
+        .... Рисование должно остаться в основном потоке.
+        .... Синхронизация осуществляется через передачу данных в основной поток;
+    4)  .... добавить в панель управления кнопки для остановки и возобновления работы интеллекта
+        .... каждого вида объектов. Реализовать через засыпание/пробуждение потоков;
+    5)  .... добавить в панель управления выпадающие списки для выставления приоритетов каждого из потоков.
+    6)  TODO реализовать сохранение объектов в файл. (загрузка тоже? спросить у Пахена)
+    7)  .... реализовать сохранение и загрузку настроек параметров программы в локальный файл.
 
     Вариант 8
     1. Автомобили двигаются по оси X от одного края области симуляции до другого со скоростью V.
@@ -79,13 +78,12 @@ public class Form extends JFrame
     /* - Система MVC - */
 
     /* Модели */
-    private SettingsModel settingsModel;
-    private SettingsController settingsController;
+    private TotalModel totalModel;
 
-    /* MVC для настроек фабрик */
-    private FactorySettingsModel factoriesModel;
+    /* Контроллеры */
     private FactorySettingsController factoriesController;
     private AISettingsController aiSettingsController;
+    private SettingsController settingsController;
 
     /* Вьюшки */
     /** Меню */
@@ -98,6 +96,9 @@ public class Form extends JFrame
     private FactoryOptionsView carsSettingsView;
     /** Панель настройки фабрики байков */
     private FactoryOptionsView bikesSettingsView;
+    /**
+     * Панель с настройками ИИ
+     */
     private AIOptionsView aiOptionsView;
 
     public Form() {
@@ -125,10 +126,9 @@ public class Form extends JFrame
         statisticDialog = new StatisticDialog(this);
         statisticDialog.setOnConfirmListener(() -> simulation.reset()); // controller.setStop();
         statisticDialog.setOnCancelListener(() -> settingsController.setStart());
-        settingsModel = new SettingsModel();
-        factoriesModel = new FactorySettingsModel();
+        totalModel = new TotalModel();
 
-        menuView = new MenuView();
+        menuView = new MenuView(this);
         toolBarView = new ToolBarView();
         sideBarView = new SideBarView();
         carsSettingsView = new FactoryOptionsView(FactoryType.car);
@@ -146,28 +146,29 @@ public class Form extends JFrame
 
         log.debug("Initializing settings system");
         settingsController = new SettingsController();
-        settingsController.setModel(settingsModel);
+        settingsController.setModel(totalModel);
         settingsController.addView(menuView);
         settingsController.addView(toolBarView);
         settingsController.addView(sideBarView);
         settingsController.addView(this);
 
         factoriesController = new FactorySettingsController();
-        factoriesController.setModel(factoriesModel);
+        factoriesController.setModel(totalModel);
         factoriesController.addView(carsSettingsView);
         factoriesController.addView(bikesSettingsView);
 
         aiSettingsController = new AISettingsController();
-        aiSettingsController.setModel(settingsModel);
+        aiOptionsView.setController(aiSettingsController);
+        aiSettingsController.setModel(totalModel);
         aiSettingsController.addView(aiOptionsView);
         aiSettingsController.addView(simulation);
+        simulation.setController(aiSettingsController);
 
         menuView.setController(settingsController);
         toolBarView.setController(settingsController);
         sideBarView.setController(settingsController);
         carsSettingsView.setController(factoriesController);
         bikesSettingsView.setController(factoriesController);
-        aiOptionsView.setController(aiSettingsController);
 
         FactoryManipulator carFactoryManipulator = new FactoryManipulator(carFactory, FactoryType.car);
         FactoryManipulator bikeFactoryManipulator = new FactoryManipulator(bikeFactory, FactoryType.bike);
@@ -280,7 +281,7 @@ public class Form extends JFrame
 
         showCanvasStatistic(stats);
 
-        if (settingsModel.showInfo)
+        if (totalModel.showInfo)
             showStatisticDialog(stats);
         else simulation.reset();
     }
@@ -330,8 +331,6 @@ public class Form extends JFrame
  @Override
     public void initializeUI() {
 
-     int spriteMaxWidth = 155;
-     int spriteMaxHeight = 81;
         contentPane = new JPanel();
         contentPane.setLayout(new GridBagLayout());
         contentPane.setInheritsPopupMenu(false);
@@ -400,6 +399,34 @@ public class Form extends JFrame
     @Override
     public void setController(SettingsController controller) {
         this.settingsController = controller;
+    }
+
+    public void saveModelsToFile(File f) {
+        try {
+            FileOutputStream saveFile = new FileOutputStream(f);
+            ObjectOutputStream save = new ObjectOutputStream(saveFile);
+            save.writeObject(totalModel);
+            save.close(); // This also closes saveFile.
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadModelsFromFile(File f) {
+        try {
+            FileInputStream saveFile = new FileInputStream(f);
+            ObjectInputStream save = new ObjectInputStream(saveFile);
+            totalModel = (TotalModel) save.readObject();
+            save.close();
+
+            aiSettingsController.setModel(totalModel);
+            settingsController.setModel(totalModel);
+            factoriesController.setModel(totalModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

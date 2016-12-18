@@ -2,8 +2,8 @@ package com.xotonic.lab.sit.ui;
 
 
 import com.xotonic.lab.sit.settings.HasUI;
-import com.xotonic.lab.sit.settings.settings.AISettingsController;
-import com.xotonic.lab.sit.settings.settings.AISettingsView;
+import com.xotonic.lab.sit.settings.ai.AISettingsController;
+import com.xotonic.lab.sit.settings.ai.AISettingsView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -89,21 +89,21 @@ public class AIOptionsView implements AISettingsView<AISettingsController>, HasU
 
     @Override
     public void OnBikeThreadPriorityChanged(int priority) {
-        //bikeSpinner.setValue(priority);
+        bikeSpinner.setValue(priority);
     }
 
     @Override
     public void OnCarThreadPriorityChanged(int priority) {
-        //carSpinner.setValue(priority);
+        carSpinner.setValue(priority);
     }
 
     @Override
     public void OnCarAIToggled(boolean on) {
-        //carToggle.setSelected(on);
+        carToggle.setSelected(on);
     }
 
     @Override
     public void OnBikeAIToggled(boolean on) {
-        //bikeToggle.setSelected(on);
+        bikeToggle.setSelected(on);
     }
 }
