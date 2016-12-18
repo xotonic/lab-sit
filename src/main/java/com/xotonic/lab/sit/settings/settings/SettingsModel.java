@@ -6,14 +6,14 @@ import com.xotonic.lab.sit.settings.Model;
 public class SettingsModel implements Model {
 
     public SimulationState simulationState;
-    public boolean showInfo;
-    public boolean showTime;
+    public boolean showInfo = false;
+    public boolean showTime = true;
 
-    public int bikeAIThreadPriority;
-    public int carAIThreadPriority;
+    public int bikeAIThreadPriority = 2;
+    public int carAIThreadPriority = 2;
 
-    public boolean isCarAIToggled;
-    public boolean isBikeAIToggled;
+    public boolean isCarAIToggled = true;
+    public boolean isBikeAIToggled = true;
 
     enum SimulationState {start, stop}
 }

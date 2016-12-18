@@ -5,9 +5,9 @@ package com.xotonic.lab.sit.vehicle;
  */
 public abstract class ThinkingVehicle extends Vehicle {
 
+    private final AI.Input input = new AI.Input();
     /** Текущий ИИ */
     private AI ai;
-    private AI.Input input = new AI.Input();
     private AI.Output output = new AI.Output();
 
     private long lastUpdated = 0;
@@ -30,8 +30,8 @@ public abstract class ThinkingVehicle extends Vehicle {
 
 
     public void processAI(World world) {
-        input.areaHeight = world.getAreaHeight();
-        input.areaWidth = world.getAreaWidth();
+        input.areaHeight = world.getAreaHeight() - 64.f;
+        input.areaWidth = world.getAreaWidth() - 115.f;
         input.timestep = world.getTimeMillis() - lastUpdated;
         input.me = this;
         lastUpdated = world.getTimeMillis();

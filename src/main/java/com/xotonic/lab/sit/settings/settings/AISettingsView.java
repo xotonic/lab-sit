@@ -1,7 +1,17 @@
 package com.xotonic.lab.sit.settings.settings;
 
-/**
- * Created by xotonic on 18.12.16.
- */
-public class AISettingsView {
+import com.xotonic.lab.sit.settings.View;
+
+
+public interface AISettingsView<SettingsControllerType extends AISettingsController>
+
+        extends View<SettingsControllerType> {
+
+    void OnBikeThreadPriorityChanged(int priority);
+
+    void OnCarThreadPriorityChanged(int priority);
+
+    void OnCarAIToggled(boolean on);
+
+    void OnBikeAIToggled(boolean on);
 }

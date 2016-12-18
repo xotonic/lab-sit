@@ -8,12 +8,13 @@ public class MyMath {
         return Math.max(min, Math.min(max, value));
     }
 
-    public static <T, V> boolean isInstanceOf(V o1) {
-        try {
-            T test = (T) o1;
-            return true;
-        } catch (ClassCastException e) {
-            return false;
+    public static float reflect(float min, float value, float max, float step) {
+        if (value + step >= max) {
+            return max - Math.abs(step - Math.abs(max - value));
         }
+        if (value + step <= min) {
+            return min + Math.abs(step - Math.abs(value - min));
+        }
+        return value + step;
     }
 }

@@ -21,6 +21,7 @@ public enum ResourceId {
     private BufferedImage image;
 
     ResourceId(String resourcePath) {
+        System.setProperty("sun.java2d.opengl", "true");
         this.resourcePath = resourcePath;
         image = loadResource(resourcePath);
     }

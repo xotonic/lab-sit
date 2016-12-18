@@ -1,32 +1,33 @@
 package com.xotonic.lab.sit.ui;
 
+import com.xotonic.lab.sit.settings.settings.AISettingsController;
+import com.xotonic.lab.sit.settings.settings.AISettingsView;
 import com.xotonic.lab.sit.vehicle.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
-public class SimulationHandler {
+public class SimulationHandler implements AISettingsView<AISettingsController> {
 
     private static Logger log = LogManager.getLogger(Form.class.getName());
-
+    private final AtomicBoolean isCarAiStarted = new AtomicBoolean();
     private Habitat habitat;
     private MutableWorld world;
     private AIManager bikeAIManager;
     private AIManager carAIManager;
-
     private Canvas canvas;
     private boolean started = false;
-    private int delay = 1;
+    private int delay = 20;
     private long simulationTime = 0;
     private long simulationStartTime = -1;
-
     private Thread logicThread;
     private Thread renderThread;
     private Thread carAIThread;
     private Thread bikeAIThread;
-
+    private AtomicBoolean isBikeAiStarted = new AtomicBoolean();
 
     public SimulationHandler() {
         bikeAIManager = new AIManager(VehicleType.bike);
@@ -36,6 +37,7 @@ public class SimulationHandler {
     private void createThreads() {
         logicThread = new Thread(() -> {
             while (started) {
+                sleep();
                 updateWorld();
                 habitat.update(world);
                 //waitForRenderDone();
@@ -52,15 +54,47 @@ public class SimulationHandler {
 
         bikeAIThread = new Thread(() -> {
             while (started) {
-                bikeAIManager.update(world);
+                {
+                    if (isBikeAiStarted.get())
+                        bikeAIManager.update(world);
+                    else {
+                        try {
+                            synchronized (isBikeAiStarted) {
+                                isBikeAiStarted.wait();
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
         });
 
         carAIThread = new Thread(() -> {
             while (started) {
-                carAIManager.update(world);
+                {
+                    if (isCarAiStarted.get())
+                        carAIManager.update(world);
+                    else {
+                        try {
+                            synchronized (isCarAiStarted) {
+                                isCarAiStarted.wait();
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
         });
+    }
+
+    private void sleep() {
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateWorld() {
@@ -146,11 +180,25 @@ public class SimulationHandler {
     private void joinThreads() {
         try {
             logicThread.join();
+            notifyBikeAI();
             bikeAIThread.join();
+            notifyCarAi();
             carAIThread.join();
             renderThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void notifyCarAi() {
+        synchronized (isCarAiStarted) {
+            isCarAiStarted.notifyAll();
+        }
+    }
+
+    private void notifyBikeAI() {
+        synchronized (isBikeAiStarted) {
+            isBikeAiStarted.notifyAll();
         }
     }
 
@@ -164,4 +212,45 @@ public class SimulationHandler {
     }
 
 
+    @Override
+    public void OnBikeThreadPriorityChanged(int priority) {
+        if (started)
+            bikeAIThread.setPriority(priority);
+    }
+
+    @Override
+    public void OnCarThreadPriorityChanged(int priority) {
+        if (started)
+            carAIThread.setPriority(priority);
+
+    }
+
+    @Override
+    public void OnCarAIToggled(boolean on) {
+        if (started) {
+            isCarAiStarted.set(on);
+
+            if (on) {
+                notifyCarAi();
+            }
+        }
+
+    }
+
+    @Override
+    public void OnBikeAIToggled(boolean on) {
+        if (started) {
+            isBikeAiStarted.set(on);
+
+            if (on) {
+                notifyBikeAI();
+            }
+        }
+
+    }
+
+    @Override
+    public void setController(AISettingsController controller) {
+
+    }
 }

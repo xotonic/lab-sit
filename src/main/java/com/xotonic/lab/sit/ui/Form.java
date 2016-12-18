@@ -3,6 +3,7 @@ package com.xotonic.lab.sit.ui;
 import com.xotonic.lab.sit.settings.factory.FactorySettingsController;
 import com.xotonic.lab.sit.settings.factory.FactorySettingsModel;
 import com.xotonic.lab.sit.settings.factory.FactoryType;
+import com.xotonic.lab.sit.settings.settings.AISettingsController;
 import com.xotonic.lab.sit.settings.settings.SettingsController;
 import com.xotonic.lab.sit.settings.settings.SettingsModel;
 import com.xotonic.lab.sit.settings.settings.SettingsView;
@@ -84,6 +85,7 @@ public class Form extends JFrame
     /* MVC для настроек фабрик */
     private FactorySettingsModel factoriesModel;
     private FactorySettingsController factoriesController;
+    private AISettingsController aiSettingsController;
 
     /* Вьюшки */
     /** Меню */
@@ -96,6 +98,7 @@ public class Form extends JFrame
     private FactoryOptionsView carsSettingsView;
     /** Панель настройки фабрики байков */
     private FactoryOptionsView bikesSettingsView;
+    private AIOptionsView aiOptionsView;
 
     public Form() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -130,6 +133,7 @@ public class Form extends JFrame
         sideBarView = new SideBarView();
         carsSettingsView = new FactoryOptionsView(FactoryType.car);
         bikesSettingsView = new FactoryOptionsView(FactoryType.bike);
+        aiOptionsView = new AIOptionsView();
 
         log.debug("Initializing UI");
         menuView.initializeUI();
@@ -137,6 +141,7 @@ public class Form extends JFrame
         sideBarView.initializeUI();
         carsSettingsView.initializeUI();
         bikesSettingsView.initializeUI();
+        aiOptionsView.initializeUI();
         initializeUI();
 
         log.debug("Initializing settings system");
@@ -152,11 +157,17 @@ public class Form extends JFrame
         factoriesController.addView(carsSettingsView);
         factoriesController.addView(bikesSettingsView);
 
+        aiSettingsController = new AISettingsController();
+        aiSettingsController.setModel(settingsModel);
+        aiSettingsController.addView(aiOptionsView);
+        aiSettingsController.addView(simulation);
+
         menuView.setController(settingsController);
         toolBarView.setController(settingsController);
         sideBarView.setController(settingsController);
         carsSettingsView.setController(factoriesController);
         bikesSettingsView.setController(factoriesController);
+        aiOptionsView.setController(aiSettingsController);
 
         FactoryManipulator carFactoryManipulator = new FactoryManipulator(carFactory, FactoryType.car);
         FactoryManipulator bikeFactoryManipulator = new FactoryManipulator(bikeFactory, FactoryType.bike);
@@ -181,11 +192,7 @@ public class Form extends JFrame
 
     /** Установка цветовой схемы */
     private static void setLookAndFeel() {
-        UIManager.put("nimbusBase", new Color(49, 247, 255));
-        UIManager.put("nimbusBlueGrey", new Color(49, 51, 53));
-        UIManager.put("control", new Color(49, 51, 53));
-        UIManager.put("nimbusFocus", new Color(53, 255, 253));
-        UIManager.put("text", new Color(189, 189, 189));
+
         try {
             UIManager.setLookAndFeel(new NimbusLookAndFeel());
         } catch (UnsupportedLookAndFeelException e) {
@@ -380,6 +387,7 @@ public class Form extends JFrame
 
         sideBarView.addFactorySettingsView(carsSettingsView);
         sideBarView.addFactorySettingsView(bikesSettingsView);
+     sideBarView.addAISettingsView(aiOptionsView);
 
         setContentPane(contentPane);
     }

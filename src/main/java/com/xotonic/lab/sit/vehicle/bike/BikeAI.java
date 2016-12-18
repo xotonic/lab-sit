@@ -19,13 +19,13 @@ public class BikeAI implements AI {
         float y = input.me.getY();
         float signedSpeed = input.me.isMovingBack() ? speed : -speed;
         float step = input.timestep * signedSpeed;
-        float nextY = MyMath.clamp(0.f, y + step, input.areaWidth);
+        float nextY = y + step;
         if (nextY >= input.areaHeight || nextY <= 0) {
             input.me.setMovingBack(!input.me.isMovingBack());
         }
         signedSpeed = input.me.isMovingBack() ? speed : -speed;
         step = input.timestep * signedSpeed;
-        nextY = MyMath.clamp(0.f, y + step, input.areaWidth);
+        nextY = MyMath.reflect(0.f, y, input.areaHeight, step);
 
         o.y = nextY;
         o.x = input.me.getX();

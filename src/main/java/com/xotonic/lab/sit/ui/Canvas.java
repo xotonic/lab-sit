@@ -51,7 +51,7 @@ class Canvas extends JPanel {
         if (started) {
             drawVehicles(g);
         }
-        if (isShowTime) {
+        if (started && isShowTime) {
 
             drawLinesTopLeft(g,
                     String.format("Time : %d", lastUpdatedTime),

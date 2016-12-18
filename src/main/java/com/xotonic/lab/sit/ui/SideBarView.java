@@ -185,4 +185,13 @@ public class SideBarView implements SettingsView<JPanel, SettingsController>{
         gbc.fill = GridBagConstraints.HORIZONTAL;
         propertiesPanel.add(panel.getRootComponent(), gbc);
     }
+
+    public void addAISettingsView(AIOptionsView view) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = GridBagConstraints.RELATIVE;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        propertiesPanel.add(view.getRootComponent(), gbc);
+    }
 }
