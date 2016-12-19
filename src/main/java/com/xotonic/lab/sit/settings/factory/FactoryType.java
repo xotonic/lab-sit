@@ -1,6 +1,8 @@
 package com.xotonic.lab.sit.settings.factory;
 
-
+/**
+ * Тип фабрики. Тут же задаются значения по умолчанию
+ */
 public enum FactoryType {
     car(new FactoryModel(100, 1.0f)),
     bike(new FactoryModel(100, 1.0f));

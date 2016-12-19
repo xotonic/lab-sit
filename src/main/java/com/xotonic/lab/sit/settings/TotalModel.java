@@ -8,6 +8,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Вся сохраняемая информация о настройках программы
+ */
 public class TotalModel implements Model {
 
     public SimulationState simulationState;

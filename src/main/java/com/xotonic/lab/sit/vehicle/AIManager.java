@@ -3,6 +3,9 @@ package com.xotonic.lab.sit.vehicle;
 
 import java.util.Collection;
 
+/**
+ * Управляет обьектами конкретного типа
+ */
 public class AIManager extends BasicBehavior {
 
     private final VehicleType vehicleType;

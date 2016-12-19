@@ -26,25 +26,6 @@ import java.io.*;
 
 /** Главная форма */
 
- /*
-    1)  .... создать абстрактный класс AI, описывающий «интеллектуальное поведение» объектов по варианту.
-        .... Класс должен быть выполнен в виде отдельного потока и работать с коллекцией объектов;
-    2)  .... реализовать класс AI для каждого из видов объекта, включив в него поведение,
-        .... описанное в индивидуальном задании по варианту;
-    3)  .... синхронизовать работу потоков расчета интеллекта объектов с их рисованием.
-        .... Рисование должно остаться в основном потоке.
-        .... Синхронизация осуществляется через передачу данных в основной поток;
-    4)  .... добавить в панель управления кнопки для остановки и возобновления работы интеллекта
-        .... каждого вида объектов. Реализовать через засыпание/пробуждение потоков;
-    5)  .... добавить в панель управления выпадающие списки для выставления приоритетов каждого из потоков.
-    6)  TODO реализовать сохранение объектов в файл. (загрузка тоже? спросить у Пахена)
-    7)  .... реализовать сохранение и загрузку настроек параметров программы в локальный файл.
-
-    Вариант 8
-    1. Автомобили двигаются по оси X от одного края области симуляции до другого со скоростью V.
-    2. Мотоциклы двигаются по оси Y от одного края области симуляции до другого со скоростью V.
- */
-
 public class Form extends JFrame
         implements KeyListener,
         SettingsView<JPanel, SettingsController>
@@ -104,6 +85,10 @@ public class Form extends JFrame
     public Form() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         addKeyListener(this);
+
+        /*
+         СОЗДАНИЕ И СВЯЗЫВАНИЕ ВСЕХ КОМПОНЕНТОВ В ОДНОМ МЕСТЕ
+         */
 
         world = new MutableWorld();
         world.setAreaHeight(600);
@@ -286,6 +271,9 @@ public class Form extends JFrame
         else simulation.reset();
     }
 
+    /**
+     * Собрать статистику
+     */
     private Statistic getStatistic() {
         log.debug("o/");
         Statistic statistic = new Statistic();
@@ -401,6 +389,7 @@ public class Form extends JFrame
         this.settingsController = controller;
     }
 
+    /** Сохранить настройки в файл */
     public void saveModelsToFile(File f) {
         try {
             FileOutputStream saveFile = new FileOutputStream(f);
@@ -413,6 +402,7 @@ public class Form extends JFrame
         }
     }
 
+    /** Загрузить настройки из файла */
     public void loadModelsFromFile(File f) {
         try {
             FileInputStream saveFile = new FileInputStream(f);
@@ -427,6 +417,21 @@ public class Form extends JFrame
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Сохранить объекты в файл
+     */
+    public void saveObjectsToFile(File f) {
+        try {
+            FileOutputStream saveFile = new FileOutputStream(f);
+            ObjectOutputStream save = new ObjectOutputStream(saveFile);
+            save.writeObject(habitat.getVehicles());
+            save.close(); // This also closes saveFile.
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Панель с настройками фабрики
+ */
 public class FactoryOptionsView implements FactorySettingsView<JPanel, FactorySettingsController> {
 
     private static final Map<FactoryType, String> localizedFactoryNames = new HashMap<>();
@@ -33,8 +36,7 @@ public class FactoryOptionsView implements FactorySettingsView<JPanel, FactorySe
     private Float[] chances = new Float[] {
             0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f};
 
-    public FactoryOptionsView(FactoryType type)
-    {
+    public FactoryOptionsView(FactoryType type) {
         setFactoryType(type);
     }
 
@@ -60,8 +62,8 @@ public class FactoryOptionsView implements FactorySettingsView<JPanel, FactorySe
         this.controller = controller;
     }
 
-   /** Создать интерфейс */
- @Override
+    /** Создать интерфейс */
+    @Override
     public void initializeUI() {
 
         assert factoryType != null;
@@ -111,9 +113,7 @@ public class FactoryOptionsView implements FactorySettingsView<JPanel, FactorySe
                     Integer.parseInt(bornPeriodField.getText()));
             success(bornPeriodField);
 
-        }
-        catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             fail(bornPeriodField);
         }
     }
@@ -148,8 +148,7 @@ public class FactoryOptionsView implements FactorySettingsView<JPanel, FactorySe
         List<Float> floats = Arrays.asList(chances);
         if (floats.contains(bornChance))
             bornChanceCombo.setSelectedIndex(floats.indexOf(bornChance));
-        else
-        {
+        else {
             bornChanceCombo.addItem(bornChance);
             bornChanceCombo.setSelectedIndex(nextSelected);
         }
@@ -161,8 +160,7 @@ public class FactoryOptionsView implements FactorySettingsView<JPanel, FactorySe
     }
 
     @Override
-    public void setFactoryType(FactoryType type)
-    {
+    public void setFactoryType(FactoryType type) {
         this.factoryType = type;
     }
 

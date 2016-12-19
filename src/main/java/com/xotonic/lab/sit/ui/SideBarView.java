@@ -10,9 +10,6 @@ import java.awt.*;
 public class SideBarView implements SettingsView<JPanel, SettingsController>{
 
     private SettingsController controller;
-
-
-
     private JButton sideBarStart;
     private JButton sideBarStop;
     private JCheckBox sideBarInfoToggle;

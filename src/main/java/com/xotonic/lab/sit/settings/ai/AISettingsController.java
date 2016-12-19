@@ -3,7 +3,9 @@ package com.xotonic.lab.sit.settings.ai;
 import com.xotonic.lab.sit.settings.Controller;
 import com.xotonic.lab.sit.settings.TotalModel;
 
-
+/**
+ * Абстрактный контроллер настроек ИИ
+ */
 public class AISettingsController
         extends Controller<TotalModel, AISettingsView> {
 

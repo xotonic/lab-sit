@@ -3,7 +3,9 @@ package com.xotonic.lab.sit.settings.factory;
 
 import com.xotonic.lab.sit.settings.Model;
 
-
+/**
+ * Информация о фабрике для сохранения в файл
+ */
 public class FactoryModel implements Model {
 
     int bornPeriod;

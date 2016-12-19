@@ -5,10 +5,19 @@ package com.xotonic.lab.sit.vehicle;
  */
 public abstract class ThinkingVehicle extends Vehicle {
 
-    private final AI.Input input = new AI.Input();
-    /** Текущий ИИ */
-    private AI ai;
-    private AI.Output output = new AI.Output();
+    /**
+     * Входные параметры
+     */
+    private transient AI.Input input = new AI.Input();
+    /**
+     * Выходные параметры
+     */
+    private transient AI.Output output = new AI.Output();
+
+    /**
+     * Текущий ИИ
+     */
+    private transient AI ai;
 
     private long lastUpdated = 0;
 
@@ -28,7 +37,7 @@ public abstract class ThinkingVehicle extends Vehicle {
         this.ai = ai;
     }
 
-
+    /** Подумать */
     public void processAI(World world) {
         input.areaHeight = world.getAreaHeight() - 64.f;
         input.areaWidth = world.getAreaWidth() - 115.f;

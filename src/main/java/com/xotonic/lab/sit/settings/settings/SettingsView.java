@@ -8,6 +8,9 @@ import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 
+/**
+ * Абстракное представление основных настроек
+ */
 public interface SettingsView<RootComponent extends JComponent,
                               SettingsControllerType extends SettingsController>
 

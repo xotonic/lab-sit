@@ -9,10 +9,13 @@ import org.apache.logging.log4j.Logger;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
+/**
+ * Класс, который аркестрирует потоками. Обновляет отрисовку и логику.
+ */
 public class SimulationHandler implements AISettingsView<AISettingsController> {
 
     private static Logger log = LogManager.getLogger(Form.class.getName());
+    /* Флаги для синхронизации */
     private final AtomicBoolean isBikeAiStarted = new AtomicBoolean();
     private final AtomicBoolean isCarAiStarted = new AtomicBoolean();
     private Habitat habitat;
@@ -21,26 +24,28 @@ public class SimulationHandler implements AISettingsView<AISettingsController> {
     private AIManager carAIManager;
     private Canvas canvas;
     private boolean started = false;
+    /* Параметры времени обновления */
     private int delay = 20;
     private long simulationTime = 0;
     private long simulationStartTime = -1;
-    private Thread logicThread;
-    private Thread renderThread;
-    private Thread carAIThread;
-    private Thread bikeAIThread;
+    /* Потоки */
+    private Thread logicThread;     // Обновление среды
+    private Thread renderThread;    // Рендер
+    private Thread carAIThread;     // ИИ машин
+    private Thread bikeAIThread;    // ИИ мотоциклов
 
     public SimulationHandler() {
         bikeAIManager = new AIManager(VehicleType.bike);
         carAIManager = new AIManager(VehicleType.car);
     }
 
+    /** Создать потоки */
     private void createThreads() {
         logicThread = new Thread(() -> {
             while (started) {
                 sleep();
                 updateWorld();
                 habitat.update(world);
-                //waitForRenderDone();
             }
         });
 
@@ -48,7 +53,6 @@ public class SimulationHandler implements AISettingsView<AISettingsController> {
         {
             while (started) {
                 canvas.update(world);
-                //notifyRenderDone();
             }
         });
 
@@ -97,6 +101,7 @@ public class SimulationHandler implements AISettingsView<AISettingsController> {
         }
     }
 
+    /** Обновить мир для следующего шага симуляции */
     private void updateWorld() {
         if (simulationStartTime == -1)
             simulationStartTime = System.currentTimeMillis();
@@ -104,23 +109,6 @@ public class SimulationHandler implements AISettingsView<AISettingsController> {
         world.setTimeMillis(simulationTime);
         world.setAreaWidth(canvas.getWidth());
         world.setAreaHeight(canvas.getHeight());
-    }
-
-    private void notifyRenderDone() {
-        synchronized (ThreadLock.vehiclesRendered) {
-            ThreadLock.vehiclesRendered.hookNotify().notify();
-        }
-    }
-
-    private void waitForRenderDone() {
-
-        synchronized (ThreadLock.vehiclesRendered) {
-            try {
-                ThreadLock.vehiclesRendered.hookWait().wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public long getSimulationTime() {

@@ -2,7 +2,9 @@ package com.xotonic.lab.sit.settings.ai;
 
 import com.xotonic.lab.sit.settings.View;
 
-
+/**
+ * Абстрактное представление настроек ИИ
+ */
 public interface AISettingsView<SettingsControllerType extends AISettingsController>
 
         extends View<SettingsControllerType> {

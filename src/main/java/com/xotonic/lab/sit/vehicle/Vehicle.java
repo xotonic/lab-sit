@@ -7,10 +7,12 @@ package com.xotonic.lab.sit.vehicle;
 
 import com.xotonic.lab.sit.ui.ResourceId;
 
+import java.io.Serializable;
+
 /**
  * @author User
  */
-public abstract class Vehicle extends BasicBehavior {
+public abstract class Vehicle extends BasicBehavior implements Serializable {
 
     protected ResourceId resourceId = ResourceId.DEFAULT;
     protected ResourceId resourceIdWhenMovingBack = ResourceId.DEFAULT;

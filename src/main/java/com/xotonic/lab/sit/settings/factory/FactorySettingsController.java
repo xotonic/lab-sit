@@ -6,6 +6,9 @@ import com.xotonic.lab.sit.settings.TotalModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Контроллер настроек фабрики
+ */
 public class FactorySettingsController
         extends Controller<TotalModel, FactorySettingsView>
 {
@@ -18,8 +21,7 @@ public class FactorySettingsController
         updateFullDefault();
     }
 
-    private void updateFullDefault()
-    {
+    private void updateFullDefault() {
         views.forEach(v -> {
             v.OnBornPeriodChanged(
                     v.getFactoryType().getDefaultModel().bornPeriod);
@@ -34,16 +36,14 @@ public class FactorySettingsController
         updateFullDefault();
     }
 
-    public void setBornChance(FactorySettingsView sender, float value)
-    {
+    public void setBornChance(FactorySettingsView sender, float value) {
         log.debug("sender: {}; type: {} value : {}", sender.hashCode(), sender.getFactoryType().name(), value);
 
         model.factoriesSettings.get(sender.getFactoryType()).bornChance = value;
         updateBornChance(sender);
     }
 
-    public void setBornPeriod(FactorySettingsView sender, int value)
-    {
+    public void setBornPeriod(FactorySettingsView sender, int value) {
         log.debug("sender: {}; type: {} value : {}", sender.hashCode(), sender.getFactoryType().name(), value);
         model.factoriesSettings.get(sender.getFactoryType()).bornPeriod = value;
         updateBornPeriod(sender);
@@ -51,21 +51,20 @@ public class FactorySettingsController
 
 
     private void updateBornPeriod(FactorySettingsView sender) {
-            views.stream()
-                    .filter(v -> v != sender & v.getFactoryType() == sender.getFactoryType())
-                    .forEach(v -> v.OnBornPeriodChanged(
-                            model.factoriesSettings.get(v.getFactoryType()).bornPeriod));
+        views.stream()
+                .filter(v -> v != sender & v.getFactoryType() == sender.getFactoryType())
+                .forEach(v -> v.OnBornPeriodChanged(
+                        model.factoriesSettings.get(v.getFactoryType()).bornPeriod));
 
     }
 
     private void updateBornChance(FactorySettingsView sender) {
-            views.stream()
-                    .filter(v -> v != sender & v.getFactoryType() == sender.getFactoryType())
-                    .forEach(v -> v.OnBornChanceChanged(
-                            model.factoriesSettings.get(v.getFactoryType()).bornChance));
+        views.stream()
+                .filter(v -> v != sender & v.getFactoryType() == sender.getFactoryType())
+                .forEach(v -> v.OnBornChanceChanged(
+                        model.factoriesSettings.get(v.getFactoryType()).bornChance));
 
     }
-
 
 
 }

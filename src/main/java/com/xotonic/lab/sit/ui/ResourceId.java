@@ -34,6 +34,9 @@ public enum ResourceId {
         return image;
     }
 
+    /**
+     * Загрузить картинку из файла ресурсов
+     */
     private BufferedImage loadResource(String resourcePath) {
         Logger log = LogManager.getLogger(ResourceId.class.getName());
         log.debug("Loading resource '{}' with path '{}'", name(), resourcePath);
@@ -44,15 +47,13 @@ public enum ResourceId {
         } catch (IOException ex) {
             ex.printStackTrace();
             return getFailedLoadingImage();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             log.error("Exception during loading resource", e);
             return getFailedLoadingImage();
         }
     }
 
-
+    /** Получить аварийное изображение */
     private BufferedImage getFailedLoadingImage() {
         Logger log = LogManager.getLogger(ResourceId.class.getName());
 
@@ -67,8 +68,8 @@ public enum ResourceId {
         return image;
     }
 
-    private BufferedImage toCompatibleImage(BufferedImage image)
-    {
+    /** Оптимизация изображения для видеокарты */
+    private BufferedImage toCompatibleImage(BufferedImage image) {
         // obtain the current system graphical settings
         GraphicsConfiguration gfx_config = GraphicsEnvironment.
                 getLocalGraphicsEnvironment().getDefaultScreenDevice().

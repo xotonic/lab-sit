@@ -7,6 +7,10 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Абстрактный контроллер.
+ * Работает с одной моделью и множеством представлений
+ */
 public abstract class Controller<ModelType extends Model, ViewType extends View> {
 
 
