@@ -1,0 +1,143 @@
+
+% Article - значит без глав, только секции
+\documentclass{article}
+\usepackage{lmodern}
+% Задаем шрифты
+\usepackage{fontspec}
+\setmainfont[Scale=1.4]{Times New Roman} % Главный шрифт
+\setmonofont[Scale=1.0]{Consolas} % Моноширинный шрифт
+
+% Поддержка русского языка (переносов, орфографии)
+\usepackage{polyglossia}
+\setmainlanguage{russian} % Ставим русский главным
+\setotherlanguage{english} % Английский второстепенным
+
+% Отступы по ГОСТу
+\usepackage{geometry}
+\geometry{
+	a4paper,
+	left=3cm,
+	top=2cm,
+	bottom=2cm,
+	right=1cm,
+}
+
+% Можно вставлять скрипты на Lua (компилить через lualatex)
+%\usepackage{luacode}
+
+% Example
+% \begin{luacode}
+% tex.print(math.random())
+% \end{luacode}
+
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily,
+  keywordstyle=\ttfamily,
+  stringstyle=\ttfamily,
+  commentstyle=\ttfamily,
+  breaklines=true,
+  keepspaces=true,
+  extendedchars=\true
+}
+
+
+\usepackage{python}
+
+
+%%% ТИТУЛЬНИК %%%
+%%%%%%%%%%%%%%%%%
+
+\begin{document}
+% Отключаем нумерацию страниц
+\pagenumbering{gobble}
+\begin{center}
+МИНИСТЕРСТВО ОБРАЗОВАНИЯ И НАУКИ РОССИЙСКОЙ ФЕДЕРАЦИИ
+\vspace{20pt}
+
+ФЕДЕРАЛЬНОЕ  АГЕНТСТВО  ПО  ОБРАЗОВАНИЮ
+
+ФЕДЕРАЛЬНОЕ  ГОСУДАРСТВЕННОЕ  БЮДЖЕТНОЕ ОБРАЗОВАТЕЛЬНОЕ  УЧРЕЖДЕНИЕ 
+ВЫСШЕГО  ПРОФЕССИОНАЛЬНОГО  ОБРАЗОВАНИЯ
+
+НОВОСИБИРСКИЙ  ГОСУДАРСТВЕННЫЙ  ТЕХНИЧЕСКИЙ  УНИВЕРСИТЕТ
+
+\vspace{\fill}
+{\bfseries \Large Лабораторная работа № 3}
+
+{\itshape по дисциплине <<Современные информационные технологии>>}
+
+на тему "Многопотоковые приложения. Потоки ввода-вывода.
+         Сериализация объектов в файл."
+
+\vspace{\fill}
+
+\begin{flushleft}
+\begin{tabular}{ l l }
+Студент & Кузьмин Д.С. \\
+Группа & АВТ-318 \\
+Преподаватель & Васюткина И.А. \\
+Вариант & 8 \\
+\end{tabular}
+\end{flushleft}
+
+\vspace{\fill}
+Новосибирск 2015 г.
+\end{center}
+\pagebreak
+
+% Включаем нумерацию страниц
+\pagenumbering{arabic}
+
+%%% СЕКЦИИ %%%
+%%%%%%%%%%%%%%
+
+\section*{Цель работы}
+
+\begin{enumerate}
+\item Изучить особенности реализации и работы потоков в Java, управлением приоритетами потоков и синхронизацией потоков.
+\item Доработать программу, созданную в лабораторных работах № 1-2:
+\end{enumerate}
+
+
+\section*{Задание варианта}
+
+Вариант задания:
+\begin{enumerate}
+\item Автомобили двигаются по оси X от одного края области симуляции до другого со скоростью V.
+\item Мотоциклы двигаются по оси Y от одного края области симуляции до другого со скоростью V.
+\end{enumerate}
+\section*{Задание}
+
+Доработать программу, созданную в лабораторной работе № 2:
+\begin{enumerate}
+
+\item Создать абстрактный класс AI, описывающий «интеллектуальное поведение» объектов по варианту. Класс должен быть выполнен в виде отдельного потока и работать с коллекцией объектов;
+\item Реализовать класс BaseAI для каждого из видов объекта, включив в него поведение, описанное в индивидуальном задании по варианту;
+\item Синхронизовать работу потоков расчета интеллекта объектов с их рисованием. Рисование должно остаться в основном потоке. Синхронизация осуществляется через передачу данных в основной поток;
+\item Добавить в панель управления кнопки для остановки и возобновления работы интеллекта каждого вида объектов. Реализовать через засыпание/пробуждение потоков;
+\item Добавить в панель управления выпадающие списки для выставления приоритетов каждого из потоков.
+\item Реализовать сохранение объектов в файл.
+\item Реализовать сохранение и загрузку настроек параметров программы в локальный файл.
+
+\end{enumerate}
+
+\section*{Вывод}
+Были рассмотрены особенности реализации и работы потоков в Java, управлением приоритетами потоков и синхронизацией потоков.
+Была разработана многооточная программа для симуляции движение транспортных средств, в которой логика, ИИ и визуализация
+просчитываются в различных потоках и реализовано их синхронизирванное взаимодействие между собой.
+
+\section*{Приложение А. Листинг программы}
+
+\lstinputlisting[title=\large{Form.java}]{src/main/java/com/xotonic/lab/sit/ui/Form.java}
+\lstinputlisting[title=\large{TotalModel.java}]{src/main/java/com/xotonic/lab/sit/settings/TotalModel.java}
+\lstinputlisting[title=\large{AISettingsController.java}]{src/main/java/com/xotonic/lab/sit/settings/ai/AISettingsController.java}
+\lstinputlisting[title=\large{SimulationHandler.java}]{src/main/java/com/xotonic/lab/sit/ui/SimulationHandler.java}
+\lstinputlisting[title=\large{AI.java}]{src/main/java/com/xotonic/lab/sit/vehicle/AI.java}
+\lstinputlisting[title=\large{AIManager.java}]{src/main/java/com/xotonic/lab/sit/vehicle/AIManager.java}
+\lstinputlisting[title=\large{ThinkingVehicle.java}]{src/main/java/com/xotonic/lab/sit/vehicle/ThinkingVehicle.java}
+\lstinputlisting[title=\large{BikeAI.java}]{src/main/java/com/xotonic/lab/sit/vehicle/bike/BikeAI.java}
+\lstinputlisting[title=\large{CarAI.java}]{src/main/java/com/xotonic/lab/sit/vehicle/car/CarAI.java}
+  
+
+\end{document}

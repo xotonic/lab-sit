@@ -18,22 +18,22 @@ public class FactorySettingsController
     @Override
     public void setModel(TotalModel model) {
         super.setModel(model);
-        updateFullDefault();
+        updateFull();
     }
 
-    private void updateFullDefault() {
+    private void updateFull() {
         views.forEach(v -> {
             v.OnBornPeriodChanged(
-                    v.getFactoryType().getDefaultModel().bornPeriod);
+                    model.factoriesSettings.get(v.getFactoryType()).bornPeriod);
             v.OnBornChanceChanged(
-                    v.getFactoryType().getDefaultModel().bornChance);
+                    model.factoriesSettings.get(v.getFactoryType()).bornChance);
         });
     }
 
     @Override
     public void addView(FactorySettingsView view) {
         super.addView(view);
-        updateFullDefault();
+        updateFull();
     }
 
     public void setBornChance(FactorySettingsView sender, float value) {

@@ -4,7 +4,6 @@ package com.xotonic.lab.sit.settings;
 import com.xotonic.lab.sit.settings.factory.FactoryModel;
 import com.xotonic.lab.sit.settings.factory.FactoryType;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,8 +24,8 @@ public class TotalModel implements Model {
     public Map<FactoryType, FactoryModel> factoriesSettings = new HashMap<>();
 
     {
-        Arrays.stream(FactoryType.values())
-                .forEach(type -> factoriesSettings.put(type, new FactoryModel()));
+         factoriesSettings.put(FactoryType.bike, new FactoryModel(100, 0.5f));
+         factoriesSettings.put(FactoryType.car, new FactoryModel(100, 0.5f));
     }
 
     public enum SimulationState {start, stop}

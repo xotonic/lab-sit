@@ -24,6 +24,7 @@ public class MenuView implements SettingsView<JMenuBar, SettingsController> {
     private JMenuItem openFileItem;
     private JMenuItem saveFileItem;
     private JMenuItem saveVehiclesItem;
+    private JMenuItem loadVehiclesItem;
     private Form form;
 
     public MenuView(Form form) {
@@ -50,9 +51,11 @@ public class MenuView implements SettingsView<JMenuBar, SettingsController> {
      openFileItem = new JMenuItem("Open");
      saveFileItem = new JMenuItem("Save");
      saveVehiclesItem = new JMenuItem("Save objects");
+     loadVehiclesItem = new JMenuItem("Open objects");
      menuFile.add(openFileItem);
      menuFile.add(saveFileItem);
      menuFile.add(saveVehiclesItem);
+     menuFile.add(loadVehiclesItem);
 
         menuSimulation = new JMenu("Simulation");
         menuBar.add(menuSimulation);
@@ -116,6 +119,14 @@ public class MenuView implements SettingsView<JMenuBar, SettingsController> {
             if (ret == JFileChooser.APPROVE_OPTION) {
                 File file = fileopen.getSelectedFile();
                 form.saveObjectsToFile(file);
+            }
+        });
+        loadVehiclesItem.addActionListener( a -> {
+            JFileChooser fileopen = new JFileChooser();
+            int ret = fileopen.showOpenDialog(null);
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                File file = fileopen.getSelectedFile();
+                form.loadObjectsFromFile(file);
             }
         });
     }

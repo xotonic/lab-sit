@@ -6,10 +6,7 @@ import com.xotonic.lab.sit.settings.factory.FactorySettingsController;
 import com.xotonic.lab.sit.settings.factory.FactoryType;
 import com.xotonic.lab.sit.settings.settings.SettingsController;
 import com.xotonic.lab.sit.settings.settings.SettingsView;
-import com.xotonic.lab.sit.vehicle.Habitat;
-import com.xotonic.lab.sit.vehicle.MutableWorld;
-import com.xotonic.lab.sit.vehicle.SimpleHabitat;
-import com.xotonic.lab.sit.vehicle.TimedLuckyFactory;
+import com.xotonic.lab.sit.vehicle.*;
 import com.xotonic.lab.sit.vehicle.bike.BikeFactory;
 import com.xotonic.lab.sit.vehicle.car.CarFactory;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +20,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
+import java.util.Collection;
 
 /** Главная форма */
 
@@ -45,7 +43,7 @@ public class Form extends JFrame
     /** Параметры мира */
     private MutableWorld world;
     /** Окружение */
-    private Habitat habitat;
+    private SimpleHabitat habitat;
     /** Фабрика машин */
     private TimedLuckyFactory carFactory;
     /** Фабрика мотоциклов */
@@ -434,4 +432,19 @@ public class Form extends JFrame
         }
     }
 
+    /**
+     * Сохранить объекты в файл
+     */
+    public void loadObjectsFromFile(File f) {
+        try {
+            FileInputStream saveFile = new FileInputStream(f);
+            ObjectInputStream save = new ObjectInputStream(saveFile);
+            Collection<Vehicle> v = (Collection<Vehicle>) save.readObject();
+            save.close();
+            habitat.setVehicles(v);
+            simulation.reloadVehicles();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

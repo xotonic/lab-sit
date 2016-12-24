@@ -130,10 +130,7 @@ public class SimulationHandler implements AISettingsView<AISettingsController> {
         if (!started) {
             createThreads();
 
-            Collection<Vehicle> vehicles = habitat.getVehicles();
-            canvas.setVehicles(vehicles);
-            bikeAIManager.setVehicles(vehicles);
-            carAIManager.setVehicles(vehicles);
+            reloadVehicles();
             habitat.start();
             canvas.start();
             started = true;
@@ -141,6 +138,15 @@ public class SimulationHandler implements AISettingsView<AISettingsController> {
 
         } else {
             log.warn("Already started");
+        }
+    }
+
+    public void reloadVehicles() {
+        Collection<Vehicle> vehicles = habitat.getVehicles();
+        synchronized (vehicles) {
+            canvas.setVehicles(vehicles);
+            bikeAIManager.setVehicles(vehicles);
+            carAIManager.setVehicles(vehicles);
         }
     }
 

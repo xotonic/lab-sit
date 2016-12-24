@@ -72,7 +72,10 @@ public class SimpleHabitat extends Habitat {
         return factories;
     }
 
-
+    public void setVehicles(Collection<Vehicle> c)
+    {
+        vehicles = (ArrayList<Vehicle>) c;
+    }
     @Override
     public void reset() {
         log.debug("Reset");
