@@ -59,12 +59,14 @@ public class Server extends Thread {
                         case (Protocol.SWAP_REQUEST):
                         {
                             log.debug("Got SWAP_REQUEST. Forwading data");
-                            String destination = (String)q.data;
-                            log.debug("Destination={}", destination);
-                            swapMap.put(destination, clientName);
-                            Server otherServer = clientsMap.get(destination);
-                            assert otherServer.clientName.equals(destination);
-                            Protocol.swapObjectsRequest(otherServer.s, destination);
+                            Protocol.SwapRequestData dest = (Protocol.SwapRequestData)q.data;
+                            String destName = dest.name;
+                            Collection<Vehicle> v = dest.vehicles;
+                            log.debug("Destination={}", destName);
+                            swapMap.put(destName, clientName);
+                            Server otherServer = clientsMap.get(destName);
+                            assert otherServer.clientName.equals(destName);
+                            Protocol.swapObjectsRequest(otherServer.s, destName, v);
 
                         } break;
                         case(Protocol.CLOSE_CONNECTION):

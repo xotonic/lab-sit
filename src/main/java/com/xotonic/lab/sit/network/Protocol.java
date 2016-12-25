@@ -13,7 +13,7 @@ import java.util.List;
 class Protocol {
 
     private static Logger  log = LogManager.getLogger(Protocol.class);
-    
+
     final static  int UNKNOWN = -1;
 
     final static  int CLOSE_CONNECTION = 0;
@@ -28,6 +28,17 @@ class Protocol {
     {
          int code;
          Object data;
+    }
+
+    static class SwapRequestData implements Serializable
+    {
+        public SwapRequestData(String name, Collection<Vehicle> vehicles) {
+            this.name = name;
+            this.vehicles = vehicles;
+        }
+
+        public String name;
+        public Collection<Vehicle> vehicles;
     }
 
     static void CloseConnection(Socket s) throws IOException
@@ -53,11 +64,13 @@ class Protocol {
         os.flush();
     }
 
-    static void swapObjectsRequest(Socket s, String clientName) throws IOException {
+    static void swapObjectsRequest(Socket s,
+                                   String clientName,
+                                   Collection<Vehicle> vehicles) throws IOException {
         OutputStream os = s.getOutputStream();
         os.write(SWAP_REQUEST);
         ObjectOutputStream oos = new ObjectOutputStream(os);
-        oos.writeObject(clientName);
+        oos.writeObject(new SwapRequestData(clientName, vehicles));
         os.flush();
     }
 

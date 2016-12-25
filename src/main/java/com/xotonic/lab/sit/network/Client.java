@@ -59,11 +59,13 @@ public class Client extends Thread {
                         } break;
                         case(Protocol.SWAP_REQUEST):
                         {
-                            //Collection<Vehicle> v = (Collection<Vehicle>)q.data;
-                            //habitat.setVehicles(v);
                             log.debug("Got SWAP_REQUEST");
+                            Protocol.SwapRequestData data = (Protocol.SwapRequestData) q.data;
+
                             synchronized (habitat.getVehicles()) {
                                 Protocol.swapObjectsResponse(socket, habitat.getVehicles());
+                                Collection<Vehicle> v = data.vehicles;
+                                listener.vehiclesUpdated(v);
                             }
                         } break;
                         case(Protocol.CLOSE_CONNECTION):
@@ -103,7 +105,9 @@ public class Client extends Thread {
 
     public void swapObjects(String name) {
         try {
-            Protocol.swapObjectsRequest(socket, name);
+            synchronized (habitat.getVehicles()) {
+                Protocol.swapObjectsRequest(socket, name, habitat.getVehicles());
+            }
         } catch (IOException e) {
             log.error(e);
         }
