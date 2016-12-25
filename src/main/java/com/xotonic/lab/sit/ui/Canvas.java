@@ -48,7 +48,7 @@ class Canvas extends JPanel {
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        if (started) {
+        if (vehicles != null) {
             drawVehicles(g);
         }
         if (started && isShowTime) {
@@ -109,10 +109,7 @@ class Canvas extends JPanel {
     }
 
     public void setVehicles(Collection<Vehicle> vehicles) {
-        if (this.vehicles == null) {
-            this.vehicles = vehicles;
-        }
-
+        this.vehicles = vehicles;
     }
 
     /** Рисуем текст статистики */

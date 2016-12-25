@@ -109,6 +109,7 @@ public class SimulationHandler implements AISettingsView<AISettingsController> {
         world.setTimeMillis(simulationTime);
         world.setAreaWidth(canvas.getWidth());
         world.setAreaHeight(canvas.getHeight());
+        //reloadVehicles();
     }
 
     public long getSimulationTime() {
@@ -128,6 +129,7 @@ public class SimulationHandler implements AISettingsView<AISettingsController> {
     public void start() {
         log.debug("Start");
         if (!started) {
+            habitat.reset();
             createThreads();
 
             reloadVehicles();
@@ -164,7 +166,7 @@ public class SimulationHandler implements AISettingsView<AISettingsController> {
         if (started) {
             started = false;
             joinThreads();
-            habitat.reset();
+
             habitat.stop();
             canvas.stop();
             simulationTime = 0;

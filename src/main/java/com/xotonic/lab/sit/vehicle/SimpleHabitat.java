@@ -74,6 +74,7 @@ public class SimpleHabitat extends Habitat {
 
     public void setVehicles(Collection<Vehicle> c)
     {
+        log.debug("Set {} objects", c.size());
         vehicles = (ArrayList<Vehicle>) c;
     }
     @Override
