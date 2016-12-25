@@ -185,8 +185,11 @@ public class SideBarView implements SettingsView<JPanel, SettingsController>{
         gbc.fill = GridBagConstraints.BOTH;
 
         JButton swap = new JButton("Swap objects");
-        swap.addActionListener( a ->
-                cic.clientSelected(clientList.getSelectedValue()));
+        swap.addActionListener(a -> {
+            String selectedValue = clientList.getSelectedValue();
+            if (selectedValue != null)
+                cic.clientSelected(selectedValue);
+        });
         clientsPanel.add(swap);
         propertiesPanel.add(clientsPanel, gbc);
     }

@@ -142,8 +142,9 @@ public class SimulationHandler implements AISettingsView<AISettingsController> {
     }
 
     public void reloadVehicles() {
-        Collection<Vehicle> vehicles = habitat.getVehicles();
-        synchronized (vehicles) {
+
+        synchronized (habitat.getVehicles()) {
+            Collection<Vehicle> vehicles = habitat.getVehicles();
             canvas.setVehicles(vehicles);
             bikeAIManager.setVehicles(vehicles);
             carAIManager.setVehicles(vehicles);

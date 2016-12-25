@@ -7,10 +7,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Server extends Thread {
     private static Logger log = LogManager.getLogger(Server.class);
@@ -90,13 +90,17 @@ public class Server extends Thread {
     private void sendClientsList()
     {
         try {
-            Protocol.clientsListResponse(s, new ArrayList<>(clientsMap.keySet()));
+            Protocol.clientsListResponse(s,clientsMap
+                            .keySet()
+                            .stream()
+                            .filter(name -> !name.equals(clientName))
+                            .collect(Collectors.toList()));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void broadcastClientsList()
+    private void broadcastClientsList()
     {
         log.debug("Broadcasting client list");
         clientsMap.values().forEach(Server::sendClientsList);

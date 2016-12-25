@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
-        <Console name="Console" habitat="SYSTEM_OUT">
-            <PatternLayout pattern="%t [%-5p] %C{1}::%M : %m%n"/>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%t [%-5p] %C{1}::%M:%L : %throwable{full} %m%n "/>
         </Console>
     </Appenders>
     <Loggers>

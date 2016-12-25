@@ -62,7 +62,9 @@ public class Client extends Thread {
                             //Collection<Vehicle> v = (Collection<Vehicle>)q.data;
                             //habitat.setVehicles(v);
                             log.debug("Got SWAP_REQUEST");
-                            Protocol.swapObjectsResponse(socket, habitat.getVehicles());
+                            synchronized (habitat.getVehicles()) {
+                                Protocol.swapObjectsResponse(socket, habitat.getVehicles());
+                            }
                         } break;
                         case(Protocol.CLOSE_CONNECTION):
                         {

@@ -476,7 +476,10 @@ public class Form extends JFrame
 
     @Override
     public void vehiclesUpdated(Collection<Vehicle> v) {
-        habitat.setVehicles(v);
-        simulation.reloadVehicles();
+        log.debug("Got {} vehicles", v.size());
+        synchronized (habitat.getVehicles()) {
+            habitat.setVehicles(v);
+            simulation.reloadVehicles();
+        }
     }
 }
