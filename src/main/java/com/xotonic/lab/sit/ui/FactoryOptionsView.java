@@ -88,7 +88,7 @@ public class FactoryOptionsView implements FactorySettingsView<JPanel, FactorySe
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         root.add(bornPeriodField, gbc);
-        gbc.gridy = 1;
+        gbc.gridx = 1;
         root.add(bornChanceCombo, gbc);
 
         root.setBorder(BorderFactory.createTitledBorder(localizedFactoryNames.get(factoryType)));

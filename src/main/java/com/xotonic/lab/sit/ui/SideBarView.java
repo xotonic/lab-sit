@@ -16,6 +16,7 @@ public class SideBarView implements SettingsView<JPanel, SettingsController>{
     private JRadioButton sideBarTimeShow;
     private JRadioButton sideBarTimeHide;
     private JPanel propertiesPanel;
+    private JList<String> clientList;
 
     private void setListeners() {
         sideBarStart.addActionListener(a -> controller.setStart());
@@ -159,7 +160,40 @@ public class SideBarView implements SettingsView<JPanel, SettingsController>{
         group.add(sideBarTimeShow);
         group.add(sideBarTimeHide);
 
-        setListeners();
+
+     setListeners();
+    }
+
+    public interface ClientItemClicked {
+        void clientSelected(String clientName);
+    }
+
+    public void createClientsList(ClientItemClicked cic) {
+        GridBagConstraints gbc;JPanel clientsPanel = new JPanel();
+        clientsPanel.setBorder(BorderFactory.createTitledBorder("Clients"));
+        clientsPanel.setLayout(new GridBagLayout());
+        clientList = new JList<>(new String[]{"test1","test2"});
+        clientList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        clientList.setLayoutOrientation(JList.VERTICAL);
+        clientList.setVisibleRowCount(-1);
+        clientsPanel.add(clientList);
+
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = GridBagConstraints.RELATIVE;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+
+        JButton swap = new JButton("Swap objects");
+        swap.addActionListener( a ->
+                cic.clientSelected(clientList.getSelectedValue()));
+        clientsPanel.add(swap);
+        propertiesPanel.add(clientsPanel, gbc);
+    }
+
+    public void updateList(String[] clientNames)
+    {
+        clientList.setListData(clientNames);
     }
 
     @Override
@@ -191,4 +225,6 @@ public class SideBarView implements SettingsView<JPanel, SettingsController>{
         gbc.fill = GridBagConstraints.HORIZONTAL;
         propertiesPanel.add(view.getRootComponent(), gbc);
     }
+
+
 }

@@ -1,12 +1,16 @@
 package com.xotonic.lab.sit.ui;
 
+import com.xotonic.lab.sit.network.Client;
 import com.xotonic.lab.sit.settings.TotalModel;
 import com.xotonic.lab.sit.settings.ai.AISettingsController;
 import com.xotonic.lab.sit.settings.factory.FactorySettingsController;
 import com.xotonic.lab.sit.settings.factory.FactoryType;
 import com.xotonic.lab.sit.settings.settings.SettingsController;
 import com.xotonic.lab.sit.settings.settings.SettingsView;
-import com.xotonic.lab.sit.vehicle.*;
+import com.xotonic.lab.sit.vehicle.MutableWorld;
+import com.xotonic.lab.sit.vehicle.SimpleHabitat;
+import com.xotonic.lab.sit.vehicle.TimedLuckyFactory;
+import com.xotonic.lab.sit.vehicle.Vehicle;
 import com.xotonic.lab.sit.vehicle.bike.BikeFactory;
 import com.xotonic.lab.sit.vehicle.car.CarFactory;
 import org.apache.logging.log4j.LogManager;
@@ -21,12 +25,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
 import java.util.Collection;
+import java.util.List;
 
 /** Главная форма */
 
 public class Form extends JFrame
-        implements KeyListener,
-        SettingsView<JPanel, SettingsController>
+        implements  KeyListener,
+                    SettingsView<JPanel,
+                    SettingsController>,
+                    Client.ServerListener
 {
 
     private static Logger log = LogManager.getLogger(Form.class.getName());
@@ -79,6 +86,7 @@ public class Form extends JFrame
      * Панель с настройками ИИ
      */
     private AIOptionsView aiOptionsView;
+    private Client client;
 
     public Form() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -158,6 +166,18 @@ public class Form extends JFrame
         factoriesController.addView(carFactoryManipulator);
         factoriesController.addView(bikeFactoryManipulator);
 
+        connectToServer();
+    }
+
+     private void connectToServer() {
+        try {
+            client = new Client(habitat, "localhost", 8888, this);
+            client.start();
+            client.requestClientsList();
+        } catch (IOException e)
+        {
+            log.error(e);
+        }
     }
 
     public static void main(String[] args) {
@@ -372,7 +392,8 @@ public class Form extends JFrame
 
         sideBarView.addFactorySettingsView(carsSettingsView);
         sideBarView.addFactorySettingsView(bikesSettingsView);
-     sideBarView.addAISettingsView(aiOptionsView);
+        sideBarView.addAISettingsView(aiOptionsView);
+        sideBarView.createClientsList( name -> client.swapObjects(name));
 
         setContentPane(contentPane);
     }
@@ -446,5 +467,16 @@ public class Form extends JFrame
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void clientsListUpdated(List<String> clients) {
+        sideBarView.updateList(clients.toArray(new String[]{}));
+    }
+
+    @Override
+    public void vehiclesUpdated(Collection<Vehicle> v) {
+        habitat.setVehicles(v);
+        simulation.reloadVehicles();
     }
 }
